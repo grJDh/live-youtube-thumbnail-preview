@@ -40,11 +40,7 @@ numInput.addEventListener("input", async () => {
   startScript();
 });
 
-// const saveOriginalVideo = () => {
-//   chrome.storage.local.set({"numInputValue": numInputElement.value}, () => {});
-// }
-
-//head function that is called for all changes and calls main function
+// head function that is called for all changes and calls main function
 const startScript = async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
@@ -58,13 +54,18 @@ const startScript = async () => {
 //main function that finds all components of the video and changes them with values from inputs
 const applyChanges = async () => {
 
+  const saveOriginalVideo = value => {
+    chrome.storage.local.set({"originalVideo": value}, () => {
+      // console.log(value.index)
+    });
+  }
+
   //getting values from storage
   const returnValueFromStorage = async (key) => {
     return new Promise((resolve, reject) => {
-      chrome.storage.local.get(key, function (result) {
+      chrome.storage.local.get(key, (result) => {
         if (result[key] === undefined) {
-          console.log("No value found");
-          reject();
+          reject("No value found");
         } else {
           resolve(result[key]);
         }
@@ -72,10 +73,32 @@ const applyChanges = async () => {
     });
   };
 
-  if (window.location.href === 'https://www.youtube.com/') {
+  const checkIfVideoIndexChanged = async (indexOfVideoToReplace) => {
+    const savedVideoDetails = await returnValueFromStorage('originalVideo');
+    const previuosIndexOfVideoToReplace = savedVideoDetails.index;
 
-    //index of video that will be replaced
-    const indexOfVideoToReplace = await returnValueFromStorage('numInputValue') - 1;
+    console.log(previuosIndexOfVideoToReplace+1, indexOfVideoToReplace+1)
+
+    if (previuosIndexOfVideoToReplace !== undefined && previuosIndexOfVideoToReplace !== indexOfVideoToReplace) {
+      const oldVideoDiv = document.querySelectorAll("ytd-rich-grid-media")[previuosIndexOfVideoToReplace].children["dismissible"];
+      const oldThumbnail = oldVideoDiv.getElementsByTagName("yt-img-shadow")[0].children[0];
+      const oldTitle = oldVideoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0].children[0];
+      const oldChannelName = oldVideoDiv.getElementsByTagName("ytd-channel-name")[0].children["container"].children["text-container"].children[0].children[0];
+      const oldAvatar = oldVideoDiv.children["details"].getElementsByTagName("a")[0].children[0].children[0];
+
+      oldThumbnail.src = savedVideoDetails.thumbnail;
+      oldTitle.textContent = savedVideoDetails.title;
+      oldChannelName.textContent = savedVideoDetails.channelName;
+      oldAvatar.src = savedVideoDetails.avatar;
+    }
+  };
+
+  //index of video that will be replaced
+  const indexOfVideoToReplace = await returnValueFromStorage('numInputValue') - 1;
+
+  await checkIfVideoIndexChanged(indexOfVideoToReplace);
+
+  if (window.location.href === 'https://www.youtube.com/') {
 
     //div with chosen video
     const videoDiv = document.querySelectorAll("ytd-rich-grid-media")[indexOfVideoToReplace].children["dismissible"];
@@ -88,6 +111,14 @@ const applyChanges = async () => {
     const title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0].children[0];
     const channelName = videoDiv.getElementsByTagName("ytd-channel-name")[0].children["container"].children["text-container"].children[0].children[0];
     const avatar = videoDiv.children["details"].getElementsByTagName("a")[0].children[0].children[0];
+
+    saveOriginalVideo({
+      index: indexOfVideoToReplace,
+      thumbnail: thumbnail.src,
+      title: title.textContent,
+      channelName: channelName.textContent,
+      avatar: avatar.src,
+    });
 
     //applying all fake changes to video
     thumbnail.src = await returnValueFromStorage('thumbnailInputValue');
