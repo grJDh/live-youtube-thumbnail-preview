@@ -4,7 +4,7 @@ const titleInputElement = document.getElementById('titleInput');
 const channelNameInputElement = document.getElementById('channelNameInput');
 const numInputElement = document.getElementById('numInput');
 
-//placing previous/default values from storage
+//placing previous/default values from storage to inputs
 chrome.storage.local.get('thumbnailInputValue', result => {
   if (result['thumbnailInputValue'] === undefined) thumbnailInputElement.defaultValue = "";
   else thumbnailInputElement.defaultValue = result['thumbnailInputValue'];
@@ -22,7 +22,7 @@ chrome.storage.local.get('numInputValue', result => {
   else numInputElement.defaultValue = result['numInputValue'];
 });
 
-//start listen to all changes to inputs and updating fake video
+//starting to listen to all changes to inputs and updating details in video
 thumbnailInput.addEventListener("input", async () => {
   chrome.storage.local.set({"thumbnailInputValue": thumbnailInputElement.value}, () => {});
   startScript();
@@ -40,9 +40,11 @@ numInput.addEventListener("input", async () => {
   startScript();
 });
 
-// const saveOriginal
+// const saveOriginalVideo = () => {
+//   chrome.storage.local.set({"numInputValue": numInputElement.value}, () => {});
+// }
 
-//main function that is called for all changes
+//head function that is called for all changes and calls main function
 const startScript = async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
@@ -53,26 +55,24 @@ const startScript = async () => {
   });
 }
 
-//main function that is called for all changes
-startScript();
-
-//
+//main function that finds all components of the video and changes them with values from inputs
 const applyChanges = async () => {
-  if (window.location.href === 'https://www.youtube.com/') {
-    
+
   //getting values from storage
-    const returnValueFromStorage = async (key) => {
-      return new Promise((resolve, reject) => {
-        chrome.storage.local.get(key, function (result) {
-          if (result[key] === undefined) {
-            console.log("No value found");
-            reject();
-          } else {
-            resolve(result[key]);
-          }
-        });
+  const returnValueFromStorage = async (key) => {
+    return new Promise((resolve, reject) => {
+      chrome.storage.local.get(key, function (result) {
+        if (result[key] === undefined) {
+          console.log("No value found");
+          reject();
+        } else {
+          resolve(result[key]);
+        }
       });
-    };
+    });
+  };
+
+  if (window.location.href === 'https://www.youtube.com/') {
 
     //index of video that will be replaced
     const indexOfVideoToReplace = await returnValueFromStorage('numInputValue') - 1;
@@ -97,9 +97,7 @@ const applyChanges = async () => {
   }
 }
 
-// const thumbnail = videoDiv.getElementsByTagName("yt-img-shadow")[0].children[0];
-// const avatar = videoDiv.children["details"].getElementsByTagName("a")[0].children[0].children[0];
-// const title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0].children[0]; 
-// const channelName = videoDiv.getElementsByTagName("ytd-channel-name")[0].children["container"].children["text-container"].children[0].children[0];
+//applying changes to video on popup opening
+startScript();
 
 // const badge = videoDiv.children["details"].children["meta"].getElementsByTagName("ytd-video-meta-block")[0].children["metadata"].children["byline-container"].getElementsByTagName("ytd-channel-name")[0].getElementsByTagName("ytd-badge-supported-renderer")[0];
