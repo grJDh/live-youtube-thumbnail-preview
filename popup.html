@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- <link rel="stylesheet" href="button.css"> -->
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
 
@@ -20,7 +20,7 @@
       <input id="channelNameInput" type="text" />
     </label>
 
-    <label>
+    <label id="numInputLabel">
       Index of video to replace
       <input id="numInput" type="number" min="1" />
     </label>
@@ -29,8 +29,13 @@
       Column
       <input id="columnInput" type="number" min="1" />
     </label> -->
+
+    <label>
+      Random position
+      <input id="randomPositionCheckbox" type="checkbox" />
+    </label>
     
-    <!-- <button id="applyChanges">Apply</button> -->
+    <button id="applyChangesButton">Apply</button>
 
     <script src="main.js"></script>
   </body>

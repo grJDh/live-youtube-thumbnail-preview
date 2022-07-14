@@ -3,6 +3,7 @@ const thumbnailInputElement = document.getElementById('thumbnailInput');
 const titleInputElement = document.getElementById('titleInput');
 const channelNameInputElement = document.getElementById('channelNameInput');
 const numInputElement = document.getElementById('numInput');
+const randomPositionCheckboxElement = document.getElementById('randomPositionCheckbox');
 
 //placing previous/default values from storage to inputs
 chrome.storage.local.get('thumbnailInputValue', result => {
@@ -21,22 +22,40 @@ chrome.storage.local.get('numInputValue', result => {
   if (result['numInputValue'] === undefined) numInputElement.defaultValue = "1";
   else numInputElement.defaultValue = result['numInputValue'];
 });
+chrome.storage.local.get('randomPositionCheckboxValue', result => {
+  if (result['randomPositionCheckboxValue'] === undefined) randomPositionCheckboxElement.checked = false;
+  else randomPositionCheckboxElement.checked = result['randomPositionCheckboxValue'];
+
+  if (randomPositionCheckboxElement.checked) numInputLabel.style.visibility = "hidden";
+});
 
 //starting to listen to all changes to inputs and updating details in video
 thumbnailInput.addEventListener("input", async () => {
   chrome.storage.local.set({"thumbnailInputValue": thumbnailInputElement.value}, () => {});
-  startScript();
+  // startScript();
 });
 titleInput.addEventListener("input", async () => {
   chrome.storage.local.set({"titleInputValue": titleInputElement.value}, () => {});
-  startScript();
+  // startScript();
 });
 channelNameInput.addEventListener("input", async () => {
   chrome.storage.local.set({"channelNameInputValue": channelNameInputElement.value}, () => {});
-  startScript();
+  // startScript();
 });
 numInput.addEventListener("input", async () => {
   chrome.storage.local.set({"numInputValue": numInputElement.value}, () => {});
+  // startScript();
+});
+randomPositionCheckbox.addEventListener("input", async () => {
+  chrome.storage.local.set({"randomPositionCheckboxValue": randomPositionCheckboxElement.checked}, () => {});
+
+  if (randomPositionCheckboxElement.checked) numInputLabel.style.visibility = "hidden";
+  else numInputLabel.style.visibility = "visible";
+  // startScript();
+});
+
+//applying changes to video on click
+applyChangesButton.addEventListener("click", () => {
   startScript();
 });
 
@@ -54,14 +73,8 @@ const startScript = async () => {
 //main function that finds all components of the video and changes them with values from inputs
 const applyChanges = async () => {
 
-  const saveOriginalVideo = value => {
-    chrome.storage.local.set({"originalVideo": value}, () => {
-      // console.log(value.index)
-    });
-  }
-
   //getting values from storage
-  const returnValueFromStorage = async (key) => {
+  const getValueFromStorage = async (key) => {
     return new Promise((resolve, reject) => {
       chrome.storage.local.get(key, (result) => {
         if (result[key] === undefined) {
@@ -73,11 +86,17 @@ const applyChanges = async () => {
     });
   };
 
+  const saveOriginalVideo = value => {
+    chrome.storage.local.set({"originalVideo": value}, () => {
+      // console.log(value.index)
+    });
+  }
+
   const checkIfVideoIndexChanged = async (indexOfVideoToReplace) => {
-    const savedVideoDetails = await returnValueFromStorage('originalVideo');
+    const savedVideoDetails = await getValueFromStorage('originalVideo');
     const previuosIndexOfVideoToReplace = savedVideoDetails.index;
 
-    console.log(previuosIndexOfVideoToReplace+1, indexOfVideoToReplace+1)
+    // console.log(previuosIndexOfVideoToReplace+1, indexOfVideoToReplace+1)
 
     if (previuosIndexOfVideoToReplace !== undefined && previuosIndexOfVideoToReplace !== indexOfVideoToReplace) {
       const oldVideoDiv = document.querySelectorAll("ytd-rich-grid-media")[previuosIndexOfVideoToReplace].children["dismissible"];
@@ -93,10 +112,31 @@ const applyChanges = async () => {
     }
   };
 
-  //index of video that will be replaced
-  const indexOfVideoToReplace = await returnValueFromStorage('numInputValue') - 1;
+  const returnIndexOfVideo = async () => {
+    const chooseRandomVideo = await getValueFromStorage('randomPositionCheckboxValue');
 
-  await checkIfVideoIndexChanged(indexOfVideoToReplace);
+    if (chooseRandomVideo) {
+      const allVideos = document.querySelectorAll("ytd-rich-grid-media");
+
+      let randomIndex = Math.floor(Math.random() * (allVideos.length / 2));
+
+      await checkIfVideoIndexChanged(randomIndex);
+
+      return randomIndex;
+
+    } else {
+      const chosenIndex = await getValueFromStorage('numInputValue') - 1;
+
+      await checkIfVideoIndexChanged(chosenIndex);
+
+      return chosenIndex;
+    }
+  }
+
+  //does user wants to replace random video
+  //index of video that will be replaced
+  const indexOfVideoToReplace = await returnIndexOfVideo()
+
 
   if (window.location.href === 'https://www.youtube.com/') {
 
@@ -121,14 +161,11 @@ const applyChanges = async () => {
     });
 
     //applying all fake changes to video
-    thumbnail.src = await returnValueFromStorage('thumbnailInputValue');
-    title.textContent = await returnValueFromStorage('titleInputValue');
-    channelName.textContent = await returnValueFromStorage('channelNameInputValue');
+    thumbnail.src = await getValueFromStorage('thumbnailInputValue');
+    title.textContent = await getValueFromStorage('titleInputValue');
+    channelName.textContent = await getValueFromStorage('channelNameInputValue');
     avatar.src = avatarFromTopbar.src;
   }
 }
-
-//applying changes to video on popup opening
-startScript();
 
 // const badge = videoDiv.children["details"].children["meta"].getElementsByTagName("ytd-video-meta-block")[0].children["metadata"].children["byline-container"].getElementsByTagName("ytd-channel-name")[0].getElementsByTagName("ytd-badge-supported-renderer")[0];
