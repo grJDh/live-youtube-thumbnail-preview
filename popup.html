@@ -5,38 +5,42 @@
   </head>
   <body>
 
-    <label>
-      Thumbnail
-      <input id="thumbnailInput" type="text" />
-    </label>
+    <main id="main">
+      <label>
+        Thumbnail
+        <input id="thumbnailInput" type="text" />
+      </label>
 
-    <label>
-      Video Title
-      <input id="titleInput" type="text" />
-    </label>
+      <label>
+        Video Title
+        <input id="titleInput" type="text" />
+      </label>
 
-    <label>
-      Channel Name
-      <input id="channelNameInput" type="text" />
-    </label>
+      <label>
+        Channel Name
+        <input id="channelNameInput" type="text" />
+      </label>
 
-    <label id="numInputLabel">
-      Index of video to replace
-      <input id="numInput" type="number" min="1" />
-    </label>
+      <label id="numInputLabel">
+        Index of video to replace
+        <input id="numInput" type="number" min="1" />
+      </label>
 
-    <!-- <label>
-      Column
-      <input id="columnInput" type="number" min="1" />
-    </label> -->
+      <!-- <label>
+        Column
+        <input id="columnInput" type="number" min="1" />
+      </label> -->
 
-    <label>
-      Random position
-      <input id="randomPositionCheckbox" type="checkbox" />
-    </label>
-    
-    <button id="applyChangesButton">Apply</button>
+      <label>
+        Random position
+        <input id="randomPositionCheckbox" type="checkbox" />
+      </label>
+      
+      <button id="applyChangesButton">Apply</button>
 
+    </main>
+
+    <p class="removed" id="wrongUrlText">This extension works only on Youtube!</p>
     <script src="main.js"></script>
   </body>
 </html>

@@ -1,3 +1,17 @@
+const checkUrl = async () => {
+  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+  if (tab.url !== 'https://www.youtube.com/') {
+    console.log("Wrong url!");
+    const mainElement = document.getElementById('main');
+    const wrongUrlTextElement = document.getElementById('wrongUrlText');
+    mainElement.classList.add("removed");
+    wrongUrlTextElement.classList.remove("removed");
+  }
+}
+
+checkUrl();
+
 //finding all inputs in popup
 const thumbnailInputElement = document.getElementById('thumbnailInput');
 const titleInputElement = document.getElementById('titleInput');
@@ -26,7 +40,7 @@ chrome.storage.local.get('randomPositionCheckboxValue', result => {
   if (result['randomPositionCheckboxValue'] === undefined) randomPositionCheckboxElement.checked = false;
   else randomPositionCheckboxElement.checked = result['randomPositionCheckboxValue'];
 
-  if (randomPositionCheckboxElement.checked) numInputLabel.style.visibility = "hidden";
+  if (randomPositionCheckboxElement.checked) numInputLabel.classList.add("hidden");
 });
 
 //starting to listen to all changes to inputs and updating details in video
@@ -49,8 +63,8 @@ numInput.addEventListener("input", async () => {
 randomPositionCheckbox.addEventListener("input", async () => {
   chrome.storage.local.set({"randomPositionCheckboxValue": randomPositionCheckboxElement.checked}, () => {});
 
-  if (randomPositionCheckboxElement.checked) numInputLabel.style.visibility = "hidden";
-  else numInputLabel.style.visibility = "visible";
+  if (randomPositionCheckboxElement.checked) numInputLabel.classList.add("hidden");
+  else numInputLabel.classList.remove("hidden");
   // startScript();
 });
 
@@ -63,15 +77,17 @@ applyChangesButton.addEventListener("click", () => {
 const startScript = async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
+  // console.log(tab.url)
+
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
-    // args: [titleInputValue, channelNameInputValue, thumbnailInputValue],
+    args: [tab.url],
     function: applyChanges,
   });
 }
 
 //main function that finds all components of the video and changes them with values from inputs
-const applyChanges = async () => {
+const applyChanges = async (url) => {
 
   //getting values from storage
   const getValueFromStorage = async (key) => {
@@ -118,7 +134,7 @@ const applyChanges = async () => {
     if (chooseRandomVideo) {
       const allVideos = document.querySelectorAll("ytd-rich-grid-media");
 
-      let randomIndex = Math.floor(Math.random() * (allVideos.length / 2));
+      const randomIndex = Math.floor(Math.random() * (allVideos.length / 2));
 
       await checkIfVideoIndexChanged(randomIndex);
 
@@ -133,12 +149,10 @@ const applyChanges = async () => {
     }
   }
 
-  //does user wants to replace random video
   //index of video that will be replaced
   const indexOfVideoToReplace = await returnIndexOfVideo()
 
-
-  if (window.location.href === 'https://www.youtube.com/') {
+  if (url === 'https://www.youtube.com/') {
 
     //div with chosen video
     const videoDiv = document.querySelectorAll("ytd-rich-grid-media")[indexOfVideoToReplace].children["dismissible"];
