@@ -26,6 +26,7 @@ checkUrl();
 
 //finding all inputs in popup
 const thumbnailInputElement = document.getElementById('thumbnailInput');
+const dropAreaElement = document.getElementById('dropArea')
 const titleInputElement = document.getElementById('titleInput');
 const channelNameInputElement = document.getElementById('channelNameInput');
 const numInputElement = document.getElementById('numInput');
@@ -80,6 +81,40 @@ randomPositionCheckbox.addEventListener("input", async () => {
   // startScript();
 });
 
+const preventDefaults = e => {
+  e.preventDefault()
+  e.stopPropagation()
+}
+const highlight = () => {
+  dropAreaElement.classList.add('highlight')
+}
+const unhighlight = () => {
+  dropAreaElement.classList.remove('highlight')
+}
+const handleDrop = e => {
+  let dt = e.dataTransfer
+  let file = dt.file
+
+  handleFiles(file);
+}
+const handleFiles = event => {
+  console.log(event.target.result);
+}
+
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+  dropAreaElement.addEventListener(eventName, preventDefaults, false)
+});
+['dragenter', 'dragover'].forEach(eventName => {
+  dropAreaElement.addEventListener(eventName, highlight, false)
+});
+['dragleave', 'drop'].forEach(eventName => {
+  dropAreaElement.addEventListener(eventName, unhighlight, false)
+});
+dropAreaElement.addEventListener('drop', handleDrop, false);
+dropAreaElement.addEventListener('change', handleFiles);
+
+
+
 //applying changes to video on click
 applyChangesButton.addEventListener("click", () => {
   startScript();
@@ -88,8 +123,9 @@ applyChangesButton.addEventListener("click", () => {
 // head function that is called for all changes and calls main function
 const startScript = async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  let page = "home";
+  let page = undefined;
 
+  //what youtube page is user on?
   if (tab.url === 'https://www.youtube.com/') page = "home";
   else if (tab.url === 'https://www.youtube.com/feed/subscriptions') page = "subs";
   else if (tab.url.includes('https://www.youtube.com/results?search_query=')) page = "search";

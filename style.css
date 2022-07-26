@@ -51,3 +51,42 @@ input[type="checkbox"] {
 #wrongUrlText {
   font-size: 20px;
 }
+
+#dropArea {
+  border: 2px dashed #ccc;
+  border-radius: 20px;
+  width: 300px;
+  font-family: sans-serif;
+  margin: 100px auto;
+  padding: 20px;
+}
+#dropArea.highlight {
+  border-color: purple;
+}
+.my-form {
+  margin-bottom: 10px;
+}
+#gallery {
+  margin-top: 10px;
+}
+#gallery img {
+  width: 150px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+.imageUploadButton {
+  display: inline-block;
+  padding: 10px;
+  background: #ccc;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+.imageUploadButton:hover {
+  background: #ddd;
+}
+#fileElem {
+  display: none;
+}
