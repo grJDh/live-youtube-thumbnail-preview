@@ -1,8 +1,20 @@
+const validURLs =[
+  'https://www.youtube.com/',
+  'https://www.youtube.com/feed/subscriptions',
+  'https://www.youtube.com/results?search_query=',
+  'https://www.youtube.com/watch?v=',
+];
+
+//if popup is opened at wrong url, display warning message
 const checkUrl = async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-  if (tab.url !== 'https://www.youtube.com/') {
-    console.log("Wrong url!");
+  const numberOfWrongURLs = validURLs.reduce((accumulator, currentValue) => {
+    if (!currentValue.includes(tab.url)) return accumulator + 1;
+    else return accumulator;
+  }, 0);
+
+  if (numberOfWrongURLs === validURLs.length) {
     const mainElement = document.getElementById('main');
     const wrongUrlTextElement = document.getElementById('wrongUrlText');
     mainElement.classList.add("removed");
@@ -128,58 +140,70 @@ const applyChanges = async (url) => {
     }
   };
 
+  //returning either random index or selected by user
   const returnIndexOfVideo = async () => {
     const chooseRandomVideo = await getValueFromStorage('randomPositionCheckboxValue');
 
     if (chooseRandomVideo) {
-      const allVideos = document.querySelectorAll("ytd-rich-grid-media");
+      // const allVideos = document.querySelectorAll("ytd-rich-grid-media");
 
-      const randomIndex = Math.floor(Math.random() * (allVideos.length / 2));
+      const randomIndex = Math.floor(Math.random() * 12);
 
-      await checkIfVideoIndexChanged(randomIndex);
+      // await checkIfVideoIndexChanged(randomIndex);
 
       return randomIndex;
 
     } else {
       const chosenIndex = await getValueFromStorage('numInputValue') - 1;
 
-      await checkIfVideoIndexChanged(chosenIndex);
+      // await checkIfVideoIndexChanged(chosenIndex);
 
       return chosenIndex;
     }
   }
 
   //index of video that will be replaced
-  const indexOfVideoToReplace = await returnIndexOfVideo()
+  const indexOfVideoToReplace = await returnIndexOfVideo();
 
+  //getting avatar of the account in case of "Get avatar from account" checkbox
+  const avatarFromTopbar = document.querySelectorAll("#avatar-btn")[0].children[0].children[0];
+
+  //div with chosen video
+  let videoDiv = undefined;
+
+  let title = undefined;
+  let avatar = undefined;
+
+  // console.log(url)
+
+  //finding url-specific components of the video
   if (url === 'https://www.youtube.com/') {
-
-    //div with chosen video
-    const videoDiv = document.querySelectorAll("ytd-rich-grid-media")[indexOfVideoToReplace].children["dismissible"];
-
-    //getting avatar of the account in case of "Get avatar from account" checkbox
-    const avatarFromTopbar = document.querySelectorAll("#avatar-btn")[0].children[0].children[0];
-
-    //finding all components of the video
-    const thumbnail = videoDiv.getElementsByTagName("yt-img-shadow")[0].children[0];
-    const title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0].children[0];
-    const channelName = videoDiv.getElementsByTagName("ytd-channel-name")[0].children["container"].children["text-container"].children[0].children[0];
-    const avatar = videoDiv.children["details"].getElementsByTagName("a")[0].children[0].children[0];
-
-    saveOriginalVideo({
-      index: indexOfVideoToReplace,
-      thumbnail: thumbnail.src,
-      title: title.textContent,
-      channelName: channelName.textContent,
-      avatar: avatar.src,
-    });
-
-    //applying all fake changes to video
-    thumbnail.src = await getValueFromStorage('thumbnailInputValue');
-    title.textContent = await getValueFromStorage('titleInputValue');
-    channelName.textContent = await getValueFromStorage('channelNameInputValue');
-    avatar.src = avatarFromTopbar.src;
+    videoDiv = document.querySelectorAll("ytd-rich-grid-media")[indexOfVideoToReplace].children["dismissible"];
+    title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0].children[0];
+    avatar = videoDiv.children["details"].getElementsByTagName("a")[0].children[0].children[0];
   }
+  else if (url === 'https://www.youtube.com/feed/subscriptions') {
+    videoDiv = document.querySelectorAll("ytd-grid-video-renderer")[indexOfVideoToReplace].children["dismissible"];
+    title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0];
+  }
+
+  //finding universal components of the video
+  const thumbnail = videoDiv.getElementsByTagName("yt-img-shadow")[0].children[0];
+  const channelName = videoDiv.getElementsByTagName("ytd-channel-name")[0].children["container"].children["text-container"].children[0].children[0];
+
+  // saveOriginalVideo({
+  //   index: indexOfVideoToReplace,
+  //   thumbnail: thumbnail.src,
+  //   title: title.textContent,
+  //   channelName: channelName.textContent,
+  //   avatar: avatar.src,
+  // });
+
+  //applying all fake changes to video
+  thumbnail.src = await getValueFromStorage('thumbnailInputValue');
+  title.textContent = await getValueFromStorage('titleInputValue');
+  channelName.textContent = await getValueFromStorage('channelNameInputValue');
+  avatar.src = avatarFromTopbar.src;
 }
 
 // const badge = videoDiv.children["details"].children["meta"].getElementsByTagName("ytd-video-meta-block")[0].children["metadata"].children["byline-container"].getElementsByTagName("ytd-channel-name")[0].getElementsByTagName("ytd-badge-supported-renderer")[0];
