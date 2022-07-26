@@ -10,7 +10,7 @@ const checkUrl = async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
   const numberOfWrongURLs = validURLs.reduce((accumulator, currentValue) => {
-    if (!currentValue.includes(tab.url)) return accumulator + 1;
+    if (!tab.url.includes(currentValue)) return accumulator + 1;
     else return accumulator;
   }, 0);
 
@@ -88,18 +88,22 @@ applyChangesButton.addEventListener("click", () => {
 // head function that is called for all changes and calls main function
 const startScript = async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  let page = "home";
 
-  // console.log(tab.url)
+  if (tab.url === 'https://www.youtube.com/') page = "home";
+  else if (tab.url === 'https://www.youtube.com/feed/subscriptions') page = "subs";
+  else if (tab.url.includes('https://www.youtube.com/results?search_query=')) page = "search";
+  else if (tab.url.includes('https://www.youtube.com/watch?v=')) page = "video";
 
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
-    args: [tab.url],
+    args: [page],
     function: applyChanges,
   });
 }
 
 //main function that finds all components of the video and changes them with values from inputs
-const applyChanges = async (url) => {
+const applyChanges = async (page) => {
 
   //getting values from storage
   const getValueFromStorage = async (key) => {
@@ -143,11 +147,17 @@ const applyChanges = async (url) => {
   //returning either random index or selected by user
   const returnIndexOfVideo = async () => {
     const chooseRandomVideo = await getValueFromStorage('randomPositionCheckboxValue');
+    const maxRandomNumberBasedOnURL = {
+      "home": 12,
+      "subs": 18,
+      "search": 4,
+      "video": 9,
+    }
 
     if (chooseRandomVideo) {
       // const allVideos = document.querySelectorAll("ytd-rich-grid-media");
 
-      const randomIndex = Math.floor(Math.random() * 12);
+      const randomIndex = Math.floor(Math.random() * maxRandomNumberBasedOnURL[page]);
 
       // await checkIfVideoIndexChanged(randomIndex);
 
@@ -171,26 +181,40 @@ const applyChanges = async (url) => {
   //div with chosen video
   let videoDiv = undefined;
 
+  //other video components
   let title = undefined;
-  let avatar = undefined;
+  let avatar = undefined; 
+  let thumbnail = undefined;
+  let channelName = undefined;
 
-  // console.log(url)
-
-  //finding url-specific components of the video
-  if (url === 'https://www.youtube.com/') {
+  //finding components of the video
+  if (page === 'home') {
     videoDiv = document.querySelectorAll("ytd-rich-grid-media")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0].children[0];
     avatar = videoDiv.children["details"].getElementsByTagName("a")[0].children[0].children[0];
+    thumbnail = videoDiv.getElementsByTagName("yt-img-shadow")[0].children[0];
+    channelName = videoDiv.getElementsByTagName("ytd-channel-name")[0].children["container"].children["text-container"].children[0].children[0];  
   }
-  else if (url === 'https://www.youtube.com/feed/subscriptions') {
+  else if (page === 'subs') {
     videoDiv = document.querySelectorAll("ytd-grid-video-renderer")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0];
+    thumbnail = videoDiv.getElementsByTagName("yt-img-shadow")[0].children[0];
+    channelName = videoDiv.getElementsByTagName("ytd-channel-name")[0].children["container"].children["text-container"].children[0].children[0];  
   }
-
-  //finding universal components of the video
-  const thumbnail = videoDiv.getElementsByTagName("yt-img-shadow")[0].children[0];
-  const channelName = videoDiv.getElementsByTagName("ytd-channel-name")[0].children["container"].children["text-container"].children[0].children[0];
-
+  else if (page === 'search') {
+    videoDiv = document.querySelectorAll("ytd-video-renderer")[indexOfVideoToReplace].children["dismissible"];
+    title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0];
+    avatar = videoDiv.querySelectorAll("#channel-info")[0].querySelectorAll("yt-img-shadow")[0].children[0];
+    thumbnail = videoDiv.getElementsByTagName("yt-img-shadow")[0].children[0];
+    channelName = videoDiv.querySelectorAll("#channel-info")[0].querySelectorAll("yt-formatted-string")[0].children[0];
+  }
+  else if (page === 'video') {
+    videoDiv = document.querySelectorAll("ytd-compact-video-renderer")[indexOfVideoToReplace].children["dismissible"];
+    title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("span")[0];
+    thumbnail = videoDiv.getElementsByTagName("yt-img-shadow")[0].children[0];
+    channelName = videoDiv.querySelectorAll("yt-formatted-string")[0];
+  }
+  
   // saveOriginalVideo({
   //   index: indexOfVideoToReplace,
   //   thumbnail: thumbnail.src,
