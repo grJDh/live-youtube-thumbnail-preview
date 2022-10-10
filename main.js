@@ -1,20 +1,16 @@
-const validURLs =[
-  'https://www.youtube.com/',
-  'https://www.youtube.com/feed/subscriptions',
-  'https://www.youtube.com/results?search_query=',
-  'https://www.youtube.com/watch?v=',
-];
-
 //if popup is opened at wrong url, display warning message
-const checkUrl = async () => {
+const checkURL = async () => {
+  const validURLs =[
+    'https://www.youtube.com/',
+    'https://www.youtube.com/feed/subscriptions',
+    'https://www.youtube.com/results?search_query=',
+    'https://www.youtube.com/watch?v=',
+  ];
+
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const matches = validURLs.filter(url => tab.url.includes(url));
 
-  const numberOfWrongURLs = validURLs.reduce((accumulator, currentValue) => {
-    if (!tab.url.includes(currentValue)) return accumulator + 1;
-    else return accumulator;
-  }, 0);
-
-  if (numberOfWrongURLs === validURLs.length) {
+  if (matches.length === 0) {
     const mainElement = document.getElementById('main');
     const wrongUrlTextElement = document.getElementById('wrongUrlText');
     mainElement.classList.add("removed");
@@ -22,7 +18,7 @@ const checkUrl = async () => {
   }
 }
 
-checkUrl();
+checkURL();
 
 //finding all inputs in popup
 const thumbnailInputElement = document.getElementById('thumbnailInput');
@@ -59,28 +55,24 @@ chrome.storage.local.get('randomPositionCheckboxValue', result => {
 //starting to listen to all changes to inputs and updating details in video
 thumbnailInput.addEventListener("input", async () => {
   chrome.storage.local.set({"thumbnailInputValue": thumbnailInputElement.value}, () => {});
-  // startScript();
 });
 titleInput.addEventListener("input", async () => {
   chrome.storage.local.set({"titleInputValue": titleInputElement.value}, () => {});
-  // startScript();
 });
 channelNameInput.addEventListener("input", async () => {
   chrome.storage.local.set({"channelNameInputValue": channelNameInputElement.value}, () => {});
-  // startScript();
 });
 numInput.addEventListener("input", async () => {
   chrome.storage.local.set({"numInputValue": numInputElement.value}, () => {});
-  // startScript();
 });
 randomPositionCheckbox.addEventListener("input", async () => {
   chrome.storage.local.set({"randomPositionCheckboxValue": randomPositionCheckboxElement.checked}, () => {});
 
   if (randomPositionCheckboxElement.checked) numInputLabel.classList.add("hidden");
   else numInputLabel.classList.remove("hidden");
-  // startScript();
 });
 
+//image upload
 const preventDefaults = e => {
   e.preventDefault()
   e.stopPropagation()
@@ -113,23 +105,19 @@ const handleFiles = event => {
 dropAreaElement.addEventListener('drop', handleDrop, false);
 dropAreaElement.addEventListener('change', handleFiles);
 
-
-
 //applying changes to video on click
-applyChangesButton.addEventListener("click", () => {
-  startScript();
-});
+applyChangesButton.addEventListener("click", () => startScript());
 
-// head function that is called for all changes and calls main function
+//starting function that is called for all changes and calls main function
 const startScript = async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  let page = undefined;
+  let page = "";
 
   //what youtube page is user on?
-  if (tab.url === 'https://www.youtube.com/') page = "home";
-  else if (tab.url === 'https://www.youtube.com/feed/subscriptions') page = "subs";
+  if (tab.url.includes('https://www.youtube.com/watch?v=')) page = "video";
+  else if (tab.url.includes('https://www.youtube.com/feed/subscriptions')) page = "subs";
   else if (tab.url.includes('https://www.youtube.com/results?search_query=')) page = "search";
-  else if (tab.url.includes('https://www.youtube.com/watch?v=')) page = "video";
+  else if (tab.url === 'https://www.youtube.com/') page = "home";
 
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
@@ -208,16 +196,10 @@ const applyChanges = async (page) => {
     }
   }
 
-  //index of video that will be replaced
   const indexOfVideoToReplace = await returnIndexOfVideo();
-
-  //getting avatar of the account in case of "Get avatar from account" checkbox
   const avatarFromTopbar = document.querySelectorAll("#avatar-btn")[0].children[0].children[0];
 
-  //div with chosen video
   let videoDiv = undefined;
-
-  //other video components
   let title = undefined;
   let avatar = undefined; 
   let thumbnail = undefined;
