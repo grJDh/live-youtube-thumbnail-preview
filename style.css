@@ -45,48 +45,40 @@ input[type="checkbox"] {
 }
 
 .removed {
-  display: none;
+  display: none !important;
 }
 
 #wrongUrlText {
   font-size: 20px;
 }
 
-#dropArea {
+#imageUploadArea {
   border: 2px dashed #ccc;
   border-radius: 20px;
-  width: 300px;
-  font-family: sans-serif;
-  margin: 100px auto;
-  padding: 20px;
-}
-#dropArea.highlight {
-  border-color: purple;
-}
-.my-form {
-  margin-bottom: 10px;
-}
-#gallery {
-  margin-top: 10px;
-}
-#gallery img {
-  width: 150px;
-  margin-bottom: 10px;
-  margin-right: 10px;
-  vertical-align: middle;
-}
-.imageUploadButton {
-  display: inline-block;
-  padding: 10px;
-  background: #ccc;
+
+  height: 200px;
+  width: 100%;
+
+  overflow: hidden;
   cursor: pointer;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
 }
-.imageUploadButton:hover {
-  background: #ddd;
+#imageUploadArea:hover {
+  background-color: darkgrey;
 }
-#fileElem {
-  display: none;
+#imageUploadArea:active {
+  background-color: grey;
+}
+
+.highlight {
+  background-color: darkgrey;
+}
+
+#imagePreview {
+  height: 200px;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

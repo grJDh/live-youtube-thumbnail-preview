@@ -6,18 +6,16 @@
   <body>
 
     <main id="main">
-      <label>
+      <label id="thumbnailInputLabel">
         Thumbnail
         <input id="thumbnailInput" type="text" />
       </label>
 
-      <div id="dropArea">
-        <form class="my-form">
-          <p>Yeah-yeah, shut up already</p>
-          <input type="file" id="fileElem" accept="image/*">
-          <label class="imageUploadButton" for="fileElem">Select image</label>
-        </form>
-      </div>
+      <label id="imageUploadArea" class="flex-center">
+        <input class="removed" id="imageInput" type="file" accept="image/*">
+        <img class="removed" id="imagePreview" src="#" alt="Your Preview" />
+        <p id="imagePreviewText">Drop your image here!</p>
+      </label>
 
       <label>
         Video Title
@@ -34,14 +32,14 @@
         <input id="numInput" type="number" min="1" />
       </label>
 
-      <!-- <label>
-        Column
-        <input id="columnInput" type="number" min="1" />
-      </label> -->
-
       <label>
         Random position
         <input id="randomPositionCheckbox" type="checkbox" />
+      </label>
+
+      <label>
+        Upload image from URL
+        <input id="imageFromURLCheckbox" type="checkbox" />
       </label>
       
       <button id="applyChangesButton">Apply</button>

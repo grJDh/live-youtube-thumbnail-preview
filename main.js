@@ -22,13 +22,25 @@ checkURL();
 
 //finding all inputs in popup
 const thumbnailInputElement = document.getElementById('thumbnailInput');
-const dropAreaElement = document.getElementById('dropArea')
+const thumbnailInputLabelElement = document.getElementById('thumbnailInputLabel');
+const imageUploadAreaElement = document.getElementById('imageUploadArea');
+const imageInputElement = document.getElementById('imageInput');
+const imagePreviewElement = document.getElementById("imagePreview");
 const titleInputElement = document.getElementById('titleInput');
 const channelNameInputElement = document.getElementById('channelNameInput');
 const numInputElement = document.getElementById('numInput');
 const randomPositionCheckboxElement = document.getElementById('randomPositionCheckbox');
+const imageFromURLCheckboxElement = document.getElementById('imageFromURLCheckbox');
 
 //placing previous/default values from storage to inputs
+chrome.storage.local.get('imageInputValue', result => {
+  if (result['imageInputValue'] !== undefined) {
+    imagePreviewElement.classList.remove("removed");
+    imagePreviewText.classList.add("removed");
+
+    imagePreviewElement.src = result['imageInputValue'];
+  }
+});
 chrome.storage.local.get('thumbnailInputValue', result => {
   if (result['thumbnailInputValue'] === undefined) thumbnailInputElement.defaultValue = "";
   else thumbnailInputElement.defaultValue = result['thumbnailInputValue'];
@@ -49,61 +61,100 @@ chrome.storage.local.get('randomPositionCheckboxValue', result => {
   if (result['randomPositionCheckboxValue'] === undefined) randomPositionCheckboxElement.checked = false;
   else randomPositionCheckboxElement.checked = result['randomPositionCheckboxValue'];
 
-  if (randomPositionCheckboxElement.checked) numInputLabel.classList.add("hidden");
+  if (randomPositionCheckboxElement.checked) numInputLabel.classList.add("removed");
+});
+chrome.storage.local.get('imageFromURLCheckboxValue', result => {
+  if (result['imageFromURLCheckboxValue'] === undefined) imageFromURLCheckboxElement.checked = false;
+  else imageFromURLCheckboxElement.checked = result['imageFromURLCheckboxValue'];
+
+  if (imageFromURLCheckboxElement.checked) imageUploadAreaElement.classList.add("removed")
+  else thumbnailInputLabelElement.classList.add("removed")
 });
 
 //starting to listen to all changes to inputs and updating details in video
-thumbnailInput.addEventListener("input", async () => {
+thumbnailInputElement.addEventListener("input", async () => {
   chrome.storage.local.set({"thumbnailInputValue": thumbnailInputElement.value}, () => {});
 });
-titleInput.addEventListener("input", async () => {
+titleInputElement.addEventListener("input", async () => {
   chrome.storage.local.set({"titleInputValue": titleInputElement.value}, () => {});
 });
-channelNameInput.addEventListener("input", async () => {
+channelNameInputElement.addEventListener("input", async () => {
   chrome.storage.local.set({"channelNameInputValue": channelNameInputElement.value}, () => {});
 });
-numInput.addEventListener("input", async () => {
+numInputElement.addEventListener("input", async () => {
   chrome.storage.local.set({"numInputValue": numInputElement.value}, () => {});
 });
-randomPositionCheckbox.addEventListener("input", async () => {
+randomPositionCheckboxElement.addEventListener("input", async () => {
   chrome.storage.local.set({"randomPositionCheckboxValue": randomPositionCheckboxElement.checked}, () => {});
 
-  if (randomPositionCheckboxElement.checked) numInputLabel.classList.add("hidden");
-  else numInputLabel.classList.remove("hidden");
+  if (randomPositionCheckboxElement.checked) numInputLabel.classList.add("removed");
+  else numInputLabel.classList.remove("removed");
+});
+imageFromURLCheckboxElement.addEventListener("input", async () => {
+  chrome.storage.local.set({"imageFromURLCheckboxValue": imageFromURLCheckboxElement.checked}, () => {});
+
+  if (imageFromURLCheckboxElement.checked) {
+    imageUploadAreaElement.classList.add("removed")
+    thumbnailInputLabelElement.classList.remove("removed")
+  }
+  else {
+    imageUploadAreaElement.classList.remove("removed")
+    thumbnailInputLabelElement.classList.add("removed")
+  }
 });
 
 //image upload
-const preventDefaults = e => {
-  e.preventDefault()
-  e.stopPropagation()
+const preventDefaults = event => {
+  event.preventDefault()
+  event.stopPropagation()
 }
-const highlight = () => {
-  dropAreaElement.classList.add('highlight')
-}
-const unhighlight = () => {
-  dropAreaElement.classList.remove('highlight')
-}
-const handleDrop = e => {
-  let dt = e.dataTransfer
-  let file = dt.file
-
-  handleFiles(file);
-}
-const handleFiles = event => {
-  console.log(event.target.result);
-}
-
 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-  dropAreaElement.addEventListener(eventName, preventDefaults, false)
-});
-['dragenter', 'dragover'].forEach(eventName => {
-  dropAreaElement.addEventListener(eventName, highlight, false)
-});
-['dragleave', 'drop'].forEach(eventName => {
-  dropAreaElement.addEventListener(eventName, unhighlight, false)
-});
-dropAreaElement.addEventListener('drop', handleDrop, false);
-dropAreaElement.addEventListener('change', handleFiles);
+  imageUploadAreaElement.addEventListener(eventName, preventDefaults)
+})
+
+// ['dragenter', 'dragover'].forEach(eventName => {
+//   imageUploadAreaElement.addEventListener(eventName, highlight, false)
+// })
+// ['dragleave', 'drop'].forEach(eventName => {
+//   imageUploadAreaElement.addEventListener(eventName, unhighlight, false)
+// })
+// function highlight() {
+//   imageUploadAreaElement.classList.add('highlight')
+// }
+// function unhighlight() {
+//   imageUploadAreaElement.classList.remove('highlight')
+// }
+
+// imageUploadAreaElement.addEventListener('drop', onDrop);
+
+imageUploadAreaElement.ondrop = event => {
+  imageInputElement.files = event.dataTransfer.files;
+
+  updateImagePreview(imageInputElement.files[0]);
+};
+
+imageInputElement.addEventListener('change', event => updateImagePreview(event.target.files[0]));
+
+const updateImagePreview = async (file) => {
+  if (file) {
+    imagePreviewElement.classList.remove("removed");
+    imagePreviewText.classList.add("removed");
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      imagePreviewElement.src = reader.result;
+
+      // console.log(reader.result)
+
+      chrome.storage.local.set({"imageInputValue": reader.result}, () => {});
+    }
+
+    reader.readAsDataURL(file);
+  } else {
+    imagePreviewElement.classList.add("removed");
+    imagePreviewText.classList.remove("removed");
+  }
+}
 
 //applying changes to video on click
 applyChangesButton.addEventListener("click", () => startScript());
@@ -170,15 +221,16 @@ const applyChanges = async (page) => {
 
   //returning either random index or selected by user
   const returnIndexOfVideo = async () => {
-    const chooseRandomVideo = await getValueFromStorage('randomPositionCheckboxValue');
-    const maxRandomNumberBasedOnURL = {
-      "home": 12,
-      "subs": 18,
-      "search": 4,
-      "video": 9,
-    }
+    const isRandomPosition = await getValueFromStorage('randomPositionCheckboxValue');
 
-    if (chooseRandomVideo) {
+    if (isRandomPosition) {
+      const maxRandomNumberBasedOnURL = {
+        "home": 12,
+        "subs": 18,
+        "search": 4,
+        "video": 9,
+      };
+      
       // const allVideos = document.querySelectorAll("ytd-rich-grid-media");
 
       const randomIndex = Math.floor(Math.random() * maxRandomNumberBasedOnURL[page]);
@@ -196,7 +248,20 @@ const applyChanges = async (page) => {
     }
   }
 
+  const returnImageToUse = async () => {
+    const isSourceOfImageIsURL = await getValueFromStorage('imageFromURLCheckboxValue');
+
+    if (isSourceOfImageIsURL) {
+      const imageToUse = await getValueFromStorage('thumbnailInputValue')
+      return imageToUse;
+    } else {
+      const imageToUse = await getValueFromStorage('imageInputValue');
+      return imageToUse;
+    }
+  }
+
   const indexOfVideoToReplace = await returnIndexOfVideo();
+  const whatImageToUse = await returnImageToUse();
   const avatarFromTopbar = document.querySelectorAll("#avatar-btn")[0].children[0].children[0];
 
   let videoDiv = undefined;
@@ -242,7 +307,7 @@ const applyChanges = async (page) => {
   // });
 
   //applying all fake changes to video
-  thumbnail.src = await getValueFromStorage('thumbnailInputValue');
+  thumbnail.src = whatImageToUse;
   title.textContent = await getValueFromStorage('titleInputValue');
   channelName.textContent = await getValueFromStorage('channelNameInputValue');
   avatar.src = avatarFromTopbar.src;
