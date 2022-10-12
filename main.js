@@ -113,10 +113,10 @@ const preventDefaults = event => {
 })
 
 // ['dragenter', 'dragover'].forEach(eventName => {
-//   imageUploadAreaElement.addEventListener(eventName, highlight, false)
+//   imageUploadAreaElement.addEventListener(eventName, highlight)
 // })
 // ['dragleave', 'drop'].forEach(eventName => {
-//   imageUploadAreaElement.addEventListener(eventName, unhighlight, false)
+//   imageUploadAreaElement.addEventListener(eventName, unhighlight)
 // })
 // function highlight() {
 //   imageUploadAreaElement.classList.add('highlight')
@@ -157,10 +157,7 @@ const updateImagePreview = async (file) => {
 }
 
 //applying changes to video on click
-applyChangesButton.addEventListener("click", () => startScript());
-
-//starting function that is called for all changes and calls main function
-const startScript = async () => {
+applyChangesButton.addEventListener("click", async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   let page = "";
 
@@ -175,7 +172,7 @@ const startScript = async () => {
     args: [page],
     function: applyChanges,
   });
-}
+});
 
 //main function that finds all components of the video and changes them with values from inputs
 const applyChanges = async (page) => {
