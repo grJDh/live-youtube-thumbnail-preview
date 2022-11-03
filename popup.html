@@ -8,25 +8,31 @@
   </head>
   <body>
     <main>
-      <div class="flex-center">
-        <label class="flex-center img-or-url-label">
-          <input
-            type="radio"
-            id="imageLocalRadio"
-            name="imageSource"
-            value="image"
-          />
-          <span class="radio-name">Image</span>
+      <div class="flex-center img-or-url-wrapper">
+        <input
+          type="radio"
+          id="imageLocalRadio"
+          name="imageSource"
+          value="image"
+        />
+        <label
+          for="imageLocalRadio"
+          class="flex-center img-or-url-label"
+        >
+          Image
         </label>
 
-        <label class="flex-center img-or-url-label">
-          <input
-            type="radio"
-            id="imageURLRadio"
-            name="imageSource"
-            value="url"
-          />
-          <span class="radio-name">URL</span>
+        <input
+          type="radio"
+          id="imageURLRadio"
+          name="imageSource"
+          value="url"
+        />
+        <label
+          for="imageURLRadio"
+          class="flex-center img-or-url-label"
+        >
+          URL
         </label>
       </div>
 
@@ -57,7 +63,7 @@
         <p id="imagePreviewText">Drop your image here!</p>
       </label>
 
-      <label>
+      <label class="mt-5">
         Video Title
         <input
           id="titleInput"
@@ -65,7 +71,7 @@
         />
       </label>
 
-      <label>
+      <label class="mt-5">
         Channel Name
         <input
           id="channelNameInput"
@@ -73,22 +79,34 @@
         />
       </label>
 
-      <label>
-        Random position
-        <input
-          id="randomPositionCheckbox"
-          type="checkbox"
-        />
-      </label>
+      <div class="flex-center switch-wrapper mt-5">
+        <label class="switch-label">
+          <p>Place badge</p>
+          <input
+            id="checkmarkCheckbox"
+            type="checkbox"
+          />
+          <span class="switch-slider"></span>
+        </label>
 
-      <label id="numInputLabel">
-        Index of video to replace
-        <input
-          id="numInput"
-          type="number"
-          min="1"
-        />
-      </label>
+        <label class="switch-label -mt-5">
+          <p>Random position</p>
+          <input
+            id="randomPositionCheckbox"
+            type="checkbox"
+          />
+          <span class="switch-slider"></span>
+        </label>
+
+        <label id="numInputLabel">
+          Index of video to replace
+          <input
+            id="numInput"
+            type="number"
+            min="1"
+          />
+        </label>
+      </div>
 
       <button id="applyChangesButton">Apply</button>
     </main>

@@ -22,11 +22,9 @@ label {
 
   font-size: 16px;
   font-weight: 500;
-}
 
-/* label:not(:first-child) {
-  margin-top: 5px;
-} */
+  box-sizing: border-box;
+}
 
 input {
   height: 30px;
@@ -34,10 +32,25 @@ input {
   margin: 0;
 
   box-sizing: border-box;
+
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 5px 5px 5px 5px;
 }
 
 input[type="checkbox"] {
   width: 30px;
+}
+
+label input {
+  margin-top: 5px;
+}
+
+.mt-5 {
+  margin-top: 5px;
+}
+.-mt-5 {
+  margin-top: -5px;
 }
 
 .flex-center {
@@ -46,9 +59,9 @@ input[type="checkbox"] {
   align-items: center;
 }
 
-.hidden {
+/* .hidden {
   visibility: hidden;
-}
+} */
 
 .removed {
   display: none !important;
@@ -80,22 +93,96 @@ input[type="checkbox"] {
 
 #applyChangesButton {
   margin-top: 10px;
+  cursor: pointer;
+  height: 40px;
+  width: 100%;
+  font-size: 20px;
+  border: 0;
+  background-color: lightblue;
+  border-radius: 5px;
 }
 
-.flex-items-center {
-  display: flex;
-  align-items: center;
+.img-or-url-wrapper {
+  margin-bottom: 8px;
+  border: 1px solid gray;
+  border-radius: 5px;
 }
 
-label.flex-center {
+.img-or-url-wrapper .img-or-url-label:first-of-type {
+  border-right: 1px solid gray;
+}
+
+.img-or-url-label {
   cursor: pointer;
   height: 25px;
 }
 
-label.flex-center input {
+input[type="radio"] {
   display: none;
 }
 
-label.flex-center input:checked + .radio-name {
+input[type="radio"]:checked + .img-or-url-label {
+  background-color: lightblue;
+  transition: all 0.5s;
+}
+
+/* .img-or-url-label input:checked + .radio-name {
   text-decoration: underline;
+} */
+
+.switch-wrapper {
+  flex-direction: column;
+}
+
+.switch-label {
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 35px;
+}
+
+.switch-label > input {
+  height: 0;
+  width: 0;
+}
+
+.switch-label > p {
+  margin: 0;
+  margin-top: -4px;
+}
+
+.switch-slider {
+  height: 22px;
+  width: 40px;
+  position: relative;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+
+  border-radius: 15px;
+}
+
+.switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 13px;
+  width: 13px;
+  left: 5px;
+  bottom: 5px;
+  background-color: white;
+  transition: 0.4s;
+
+  border-radius: 50px;
+}
+
+input:checked + .switch-slider {
+  background-color: lightblue;
+}
+
+input:checked + .switch-slider:before {
+  transform: translateX(17px);
 }

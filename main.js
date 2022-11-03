@@ -200,7 +200,7 @@ const applyChanges = async page => {
     });
   };
 
-  console.log(document.querySelector('input[name="imageSource"]:checked').value);
+  console.log(123);
 
   const checkIfVideoIndexChanged = async indexOfVideoToReplace => {
     const savedVideoDetails = await getValueFromStorage("originalVideo");
