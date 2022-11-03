@@ -1,52 +1,104 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="style.css">
+    <link
+      rel="stylesheet"
+      href="style.css"
+    />
   </head>
   <body>
+    <main>
+      <div class="flex-center">
+        <label class="flex-center img-or-url-label">
+          <input
+            type="radio"
+            id="imageLocalRadio"
+            name="imageSource"
+            value="image"
+          />
+          <span class="radio-name">Image</span>
+        </label>
 
-    <main id="main">
+        <label class="flex-center img-or-url-label">
+          <input
+            type="radio"
+            id="imageURLRadio"
+            name="imageSource"
+            value="url"
+          />
+          <span class="radio-name">URL</span>
+        </label>
+      </div>
+
       <label id="thumbnailInputLabel">
         Thumbnail
-        <input id="thumbnailInput" type="text" />
+        <input
+          id="thumbnailInput"
+          type="text"
+        />
       </label>
 
-      <label id="imageUploadArea" class="flex-center">
-        <input class="removed" id="imageInput" type="file" accept="image/*">
-        <img class="removed" id="imagePreview" src="#" alt="Your Preview" />
+      <label
+        id="imageUploadArea"
+        class="flex-center"
+      >
+        <input
+          class="removed"
+          id="imageInput"
+          type="file"
+          accept="image/*"
+        />
+        <img
+          class="removed"
+          id="imagePreview"
+          src="#"
+          alt="Your Preview"
+        />
         <p id="imagePreviewText">Drop your image here!</p>
       </label>
 
       <label>
         Video Title
-        <input id="titleInput" type="text" />
+        <input
+          id="titleInput"
+          type="text"
+        />
       </label>
 
       <label>
         Channel Name
-        <input id="channelNameInput" type="text" />
-      </label>
-
-      <label id="numInputLabel">
-        Index of video to replace
-        <input id="numInput" type="number" min="1" />
+        <input
+          id="channelNameInput"
+          type="text"
+        />
       </label>
 
       <label>
         Random position
-        <input id="randomPositionCheckbox" type="checkbox" />
+        <input
+          id="randomPositionCheckbox"
+          type="checkbox"
+        />
       </label>
 
-      <label>
-        Upload image from URL
-        <input id="imageFromURLCheckbox" type="checkbox" />
+      <label id="numInputLabel">
+        Index of video to replace
+        <input
+          id="numInput"
+          type="number"
+          min="1"
+        />
       </label>
-      
+
       <button id="applyChangesButton">Apply</button>
-
     </main>
 
-    <p class="removed" id="wrongUrlText">This extension works only on Youtube Home, Search, Subscriptions and Video Watch!</p>
+    <p
+      class="removed"
+      id="wrongUrlText"
+    >
+      This extension works only on Youtube Home, Search, Subscriptions and Video Watch!
+    </p>
     <script src="main.js"></script>
   </body>
 </html>

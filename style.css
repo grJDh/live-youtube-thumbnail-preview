@@ -24,9 +24,9 @@ label {
   font-weight: 500;
 }
 
-label:not(:first-child) {
+/* label:not(:first-child) {
   margin-top: 5px;
-}
+} */
 
 input {
   height: 30px;
@@ -38,6 +38,12 @@ input {
 
 input[type="checkbox"] {
   width: 30px;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .hidden {
@@ -68,17 +74,28 @@ input[type="checkbox"] {
 #imageUploadArea:active {
   background-color: grey;
 }
-
-.highlight {
-  background-color: darkgrey;
-}
-
 #imagePreview {
   height: 200px;
 }
 
-.flex-center {
+#applyChangesButton {
+  margin-top: 10px;
+}
+
+.flex-items-center {
   display: flex;
-  justify-content: center;
   align-items: center;
+}
+
+label.flex-center {
+  cursor: pointer;
+  height: 25px;
+}
+
+label.flex-center input {
+  display: none;
+}
+
+label.flex-center input:checked + .radio-name {
+  text-decoration: underline;
 }
