@@ -60,7 +60,7 @@ label input {
 }
 
 /* .hidden {
-  visibility: hidden;
+  visibility: hidden !important;
 } */
 
 .removed {
