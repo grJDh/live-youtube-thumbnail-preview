@@ -28,7 +28,9 @@ const imageInputElement = document.getElementById("imageInput");
 const imagePreviewElement = document.getElementById("imagePreview");
 const titleInputElement = document.getElementById("titleInput");
 const channelNameInputElement = document.getElementById("channelNameInput");
+const numInputLabelElement = document.getElementById("numInputLabel");
 const numInputElement = document.getElementById("numInput");
+const useDefaultAvatarCheckboxElement = document.getElementById("useDefaultAvatarCheckbox");
 const randomPositionCheckboxElement = document.getElementById("randomPositionCheckbox");
 // const badgeCheckboxElement = document.getElementById("badgeCheckbox");
 const imageSourceRadios = document.querySelectorAll('input[name="imageSource"]');
@@ -60,11 +62,17 @@ chrome.storage.local.get("numInputValue", result => {
   if (result["numInputValue"] === undefined) numInputElement.defaultValue = "1";
   else numInputElement.defaultValue = result["numInputValue"];
 });
+chrome.storage.local.get("useDefaultAvatarCheckboxValue", result => {
+  if (result["useDefaultAvatarCheckboxValue"] === undefined) useDefaultAvatarCheckboxElement.checked = false;
+  else useDefaultAvatarCheckboxElement.checked = result["useDefaultAvatarCheckboxValue"];
+
+  if (useDefaultAvatarCheckboxElement.checked) lol.classList.remove("removed");
+});
 chrome.storage.local.get("randomPositionCheckboxValue", result => {
   if (result["randomPositionCheckboxValue"] === undefined) randomPositionCheckboxElement.checked = false;
   else randomPositionCheckboxElement.checked = result["randomPositionCheckboxValue"];
 
-  if (randomPositionCheckboxElement.checked) numInputLabel.classList.add("removed");
+  if (randomPositionCheckboxElement.checked) numInputLabelElement.classList.add("removed");
 });
 // chrome.storage.local.get("badgeCheckboxValue", result => {
 //   if (result["badgeCheckboxValue"] === undefined) badgeCheckboxElement.checked = false;
@@ -100,11 +108,18 @@ channelNameInputElement.addEventListener("input", async () => {
 numInputElement.addEventListener("input", async () => {
   chrome.storage.local.set({ numInputValue: numInputElement.value }, () => {});
 });
+
+useDefaultAvatarCheckboxElement.addEventListener("input", async () => {
+  chrome.storage.local.set({ useDefaultAvatarCheckboxValue: useDefaultAvatarCheckboxElement.checked }, () => {});
+
+  if (useDefaultAvatarCheckboxElement.checked) lol.classList.add("removed");
+  else lol.classList.remove("removed");
+});
 randomPositionCheckboxElement.addEventListener("input", async () => {
   chrome.storage.local.set({ randomPositionCheckboxValue: randomPositionCheckboxElement.checked }, () => {});
 
-  if (randomPositionCheckboxElement.checked) numInputLabel.classList.add("removed");
-  else numInputLabel.classList.remove("removed");
+  if (randomPositionCheckboxElement.checked) numInputLabelElement.classList.add("removed");
+  else numInputLabelElement.classList.remove("removed");
 });
 // badgeCheckboxElement.addEventListener("input", async () => {
 //   chrome.storage.local.set({ badgeCheckboxValue: badgeCheckboxElement.checked }, () => {});
