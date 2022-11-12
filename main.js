@@ -36,8 +36,56 @@ const randomPositionCheckboxElement = document.getElementById("randomPositionChe
 const imageSourceRadios = document.querySelectorAll('input[name="imageSource"]');
 const imageLocalRadioElement = document.getElementById("imageLocalRadio");
 const imageURLRadioElement = document.getElementById("imageURLRadio");
+const lol = document.getElementById("lol");
 
 //placing previous/default values from storage to inputs
+const readValueFromStorageAndPlaceDefaultValue = (valueName, element, defaultValue = "") => {
+  chrome.storage.local.get(valueName, result => {
+    if (result[valueName] === undefined) element.defaultValue = defaultValue;
+    else element.defaultValue = result[valueName];
+  });
+};
+const readValueFromStorageAndToggleRemoved = (valueName, element, toggledElement, remove = true) => {
+  chrome.storage.local.get(valueName, result => {
+    if (result[valueName] === undefined) element.checked = false;
+    else element.checked = result[valueName];
+
+    if (element.checked) {
+      if (remove) toggledElement.classList.add("removed");
+      else toggledElement.classList.remove("removed");
+    }
+  });
+};
+
+readValueFromStorageAndPlaceDefaultValue("thumbnailInputValue", thumbnailInputElement, "");
+readValueFromStorageAndPlaceDefaultValue("titleInputValue", titleInputElement, "");
+readValueFromStorageAndPlaceDefaultValue("channelNameInputValue", channelNameInputElement, "");
+readValueFromStorageAndPlaceDefaultValue("numInputValue", numInputElement, "3");
+
+readValueFromStorageAndToggleRemoved("useDefaultAvatarCheckboxValue", useDefaultAvatarCheckboxElement, lol, false);
+readValueFromStorageAndToggleRemoved(
+  "randomPositionCheckboxValue",
+  randomPositionCheckboxElement,
+  numInputLabelElement,
+  true
+);
+
+// chrome.storage.local.get("useDefaultAvatarCheckboxValue", result => {
+//   if (result["useDefaultAvatarCheckboxValue"] === undefined) useDefaultAvatarCheckboxElement.checked = false;
+//   else useDefaultAvatarCheckboxElement.checked = result["useDefaultAvatarCheckboxValue"];
+
+//   if (useDefaultAvatarCheckboxElement.checked) lol.classList.remove("removed");
+// });
+// chrome.storage.local.get("randomPositionCheckboxValue", result => {
+//   if (result["randomPositionCheckboxValue"] === undefined) randomPositionCheckboxElement.checked = false;
+//   else randomPositionCheckboxElement.checked = result["randomPositionCheckboxValue"];
+
+//   if (randomPositionCheckboxElement.checked) numInputLabelElement.classList.add("removed");
+// });
+// chrome.storage.local.get("badgeCheckboxValue", result => {
+//   if (result["badgeCheckboxValue"] === undefined) badgeCheckboxElement.checked = false;
+//   else badgeCheckboxElement.checked = result["badgeCheckboxValue"];
+// });
 chrome.storage.local.get("imageInputValue", result => {
   if (result["imageInputValue"] !== undefined) {
     imagePreviewElement.classList.remove("removed");
@@ -46,38 +94,6 @@ chrome.storage.local.get("imageInputValue", result => {
     imagePreviewElement.src = result["imageInputValue"];
   }
 });
-chrome.storage.local.get("thumbnailInputValue", result => {
-  if (result["thumbnailInputValue"] === undefined) thumbnailInputElement.defaultValue = "";
-  else thumbnailInputElement.defaultValue = result["thumbnailInputValue"];
-});
-chrome.storage.local.get("titleInputValue", result => {
-  if (result["titleInputValue"] === undefined) titleInputElement.defaultValue = "";
-  else titleInputElement.defaultValue = result["titleInputValue"];
-});
-chrome.storage.local.get("channelNameInputValue", result => {
-  if (result["channelNameInputValue"] === undefined) channelNameInputElement.defaultValue = "";
-  else channelNameInputElement.defaultValue = result["channelNameInputValue"];
-});
-chrome.storage.local.get("numInputValue", result => {
-  if (result["numInputValue"] === undefined) numInputElement.defaultValue = "1";
-  else numInputElement.defaultValue = result["numInputValue"];
-});
-chrome.storage.local.get("useDefaultAvatarCheckboxValue", result => {
-  if (result["useDefaultAvatarCheckboxValue"] === undefined) useDefaultAvatarCheckboxElement.checked = false;
-  else useDefaultAvatarCheckboxElement.checked = result["useDefaultAvatarCheckboxValue"];
-
-  if (useDefaultAvatarCheckboxElement.checked) lol.classList.remove("removed");
-});
-chrome.storage.local.get("randomPositionCheckboxValue", result => {
-  if (result["randomPositionCheckboxValue"] === undefined) randomPositionCheckboxElement.checked = false;
-  else randomPositionCheckboxElement.checked = result["randomPositionCheckboxValue"];
-
-  if (randomPositionCheckboxElement.checked) numInputLabelElement.classList.add("removed");
-});
-// chrome.storage.local.get("badgeCheckboxValue", result => {
-//   if (result["badgeCheckboxValue"] === undefined) badgeCheckboxElement.checked = false;
-//   else badgeCheckboxElement.checked = result["badgeCheckboxValue"];
-// });
 chrome.storage.local.get("imageSourceValue", result => {
   switch (result["imageSourceValue"]) {
     case "url":
@@ -96,31 +112,68 @@ chrome.storage.local.get("imageSourceValue", result => {
 });
 
 //starting to listen to all changes to inputs and updating details in video
-thumbnailInputElement.addEventListener("input", async () => {
-  chrome.storage.local.set({ thumbnailInputValue: thumbnailInputElement.value }, () => {});
-});
-titleInputElement.addEventListener("input", async () => {
-  chrome.storage.local.set({ titleInputValue: titleInputElement.value }, () => {});
-});
-channelNameInputElement.addEventListener("input", async () => {
-  chrome.storage.local.set({ channelNameInputValue: channelNameInputElement.value }, () => {});
-});
-numInputElement.addEventListener("input", async () => {
-  chrome.storage.local.set({ numInputValue: numInputElement.value }, () => {});
-});
+const listenToChangesAndUpdateStorage = (element, valueName) => {
+  element.addEventListener("input", async () => {
+    chrome.storage.local.set({ [valueName]: element.value }, () => {});
+  });
+};
+const listenToChangesUpdateStorageAndRemoveElement = (element, valueName, toggledElement, remove = true) => {
+  element.addEventListener("input", async () => {
+    chrome.storage.local.set({ [valueName]: element.checked }, () => {});
 
-useDefaultAvatarCheckboxElement.addEventListener("input", async () => {
-  chrome.storage.local.set({ useDefaultAvatarCheckboxValue: useDefaultAvatarCheckboxElement.checked }, () => {});
+    if (remove) {
+      if (element.checked) toggledElement.classList.remove("removed");
+      else toggledElement.classList.add("removed");
+    } else {
+      if (element.checked) toggledElement.classList.add("removed");
+      else toggledElement.classList.remove("removed");
+    }
+  });
+};
 
-  if (useDefaultAvatarCheckboxElement.checked) lol.classList.add("removed");
-  else lol.classList.remove("removed");
-});
-randomPositionCheckboxElement.addEventListener("input", async () => {
-  chrome.storage.local.set({ randomPositionCheckboxValue: randomPositionCheckboxElement.checked }, () => {});
+listenToChangesAndUpdateStorage(thumbnailInputElement, "thumbnailInputValue");
+listenToChangesAndUpdateStorage(titleInputElement, "titleInputValue");
+listenToChangesAndUpdateStorage(channelNameInputElement, "channelNameInputValue");
+listenToChangesAndUpdateStorage(numInputElement, "numInputValue");
 
-  if (randomPositionCheckboxElement.checked) numInputLabelElement.classList.add("removed");
-  else numInputLabelElement.classList.remove("removed");
-});
+listenToChangesUpdateStorageAndRemoveElement(
+  useDefaultAvatarCheckboxElement,
+  "useDefaultAvatarCheckboxValue",
+  lol,
+  true
+);
+listenToChangesUpdateStorageAndRemoveElement(
+  randomPositionCheckboxElement,
+  "randomPositionCheckboxValue",
+  numInputLabelElement,
+  false
+);
+
+// thumbnailInputElement.addEventListener("input", async () => {
+//   chrome.storage.local.set({ thumbnailInputValue: thumbnailInputElement.value }, () => {});
+// });
+// titleInputElement.addEventListener("input", async () => {
+//   chrome.storage.local.set({ titleInputValue: titleInputElement.value }, () => {});
+// });
+// channelNameInputElement.addEventListener("input", async () => {
+//   chrome.storage.local.set({ channelNameInputValue: channelNameInputElement.value }, () => {});
+// });
+// numInputElement.addEventListener("input", async () => {
+//   chrome.storage.local.set({ numInputValue: numInputElement.value }, () => {});
+// });
+// useDefaultAvatarCheckboxElement.addEventListener("input", async () => {
+//   chrome.storage.local.set({ useDefaultAvatarCheckboxValue: useDefaultAvatarCheckboxElement.checked }, () => {});
+
+//   if (useDefaultAvatarCheckboxElement.checked) lol.classList.remove("removed");
+//   else lol.classList.add("removed");
+// });
+// randomPositionCheckboxElement.addEventListener("input", async () => {
+//   chrome.storage.local.set({ randomPositionCheckboxValue: randomPositionCheckboxElement.checked }, () => {});
+
+//   if (randomPositionCheckboxElement.checked) numInputLabelElement.classList.add("removed");
+//   else numInputLabelElement.classList.remove("removed");
+// });
+
 // badgeCheckboxElement.addEventListener("input", async () => {
 //   chrome.storage.local.set({ badgeCheckboxValue: badgeCheckboxElement.checked }, () => {});
 // });
