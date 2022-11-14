@@ -331,9 +331,20 @@ const applyChanges = async page => {
     }
   };
 
+  const returnAvatarToUse = async () => {
+    const useDefaultAvatar = await getValueFromStorage("useDefaultAvatarCheckboxValue");
+
+    if (useDefaultAvatar) {
+      return document.querySelectorAll("#avatar-btn")[0].children[0].children[0].src;
+    } else {
+      const avatarToUse = await getValueFromStorage("avatarUploadInputValue");
+      return avatarToUse;
+    }
+  };
+
   const indexOfVideoToReplace = await returnIndexOfVideo();
   const whatImageToUse = await returnImageToUse();
-  const avatarFromTopbar = document.querySelectorAll("#avatar-btn")[0].children[0].children[0];
+  const avatarImage = await returnAvatarToUse();
 
   let videoDiv = undefined;
   let title = undefined;
@@ -388,7 +399,7 @@ const applyChanges = async page => {
   thumbnail.src = whatImageToUse;
   title.textContent = await getValueFromStorage("titleInputValue");
   channelName.textContent = await getValueFromStorage("channelNameInputValue");
-  avatar.src = avatarFromTopbar.src;
+  avatar.src = avatarImage;
 
   // const showBadge = await getValueFromStorage("badgeCheckboxValue");
   // if (showBadge) {
