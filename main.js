@@ -21,17 +21,18 @@ const checkURL = async () => {
 checkURL();
 
 //finding all inputs in popup
-const thumbnailInputElement = document.getElementById("thumbnailInput");
-const thumbnailInputLabelElement = document.getElementById("thumbnailInputLabel");
-const imageUploadAreaElement = document.getElementById("imageUploadArea");
-const imageInputElement = document.getElementById("imageInput");
-const imagePreviewElement = document.getElementById("imagePreview");
+const thumbnailURLInputElement = document.getElementById("thumbnailURLInput");
+const thumbnailURLInputLabelElement = document.getElementById("thumbnailURLInputLabel");
+const thumbnailUploadAreaElement = document.getElementById("thumbnailUploadArea");
+const thumbnailUploadInputElement = document.getElementById("thumbnailUploadInput");
+const thumbnailPreviewElement = document.getElementById("thumbnailPreview");
+const thumbnailPreviewTextElement = document.getElementById("thumbnailPreviewText");
 const titleInputElement = document.getElementById("titleInput");
 const channelNameInputElement = document.getElementById("channelNameInput");
 const numInputLabelElement = document.getElementById("numInputLabel");
 const numInputElement = document.getElementById("numInput");
 const useDefaultAvatarCheckboxElement = document.getElementById("useDefaultAvatarCheckbox");
-const avatarPreviewElement = document.getElementById("avatarPreview");
+const avatarUploadAreaElement = document.getElementById("avatarUploadArea");
 const randomPositionCheckboxElement = document.getElementById("randomPositionCheckbox");
 // const badgeCheckboxElement = document.getElementById("badgeCheckbox");
 const imageSourceRadios = document.querySelectorAll('input[name="imageSource"]');
@@ -63,7 +64,7 @@ const readValueFromStorageAndToggleRemoved = (
   });
 };
 
-readValueFromStorageAndPlaceDefaultValue("thumbnailInputValue", thumbnailInputElement, "");
+readValueFromStorageAndPlaceDefaultValue("thumbnailURLInputValue", thumbnailURLInputElement, "");
 readValueFromStorageAndPlaceDefaultValue("titleInputValue", titleInputElement, "");
 readValueFromStorageAndPlaceDefaultValue("channelNameInputValue", channelNameInputElement, "");
 readValueFromStorageAndPlaceDefaultValue("numInputValue", numInputElement, "3");
@@ -71,7 +72,7 @@ readValueFromStorageAndPlaceDefaultValue("numInputValue", numInputElement, "3");
 readValueFromStorageAndToggleRemoved(
   "useDefaultAvatarCheckboxValue",
   useDefaultAvatarCheckboxElement,
-  avatarPreviewElement,
+  avatarUploadAreaElement,
   true,
   true
 );
@@ -83,32 +84,32 @@ readValueFromStorageAndToggleRemoved(
   true
 );
 
-chrome.storage.local.get("imageInputValue", result => {
-  if (result["imageInputValue"] !== undefined) {
-    imagePreviewElement.classList.remove("removed");
-    imagePreviewText.classList.add("removed");
+chrome.storage.local.get("thumbnailUploadInputValue", result => {
+  if (result["thumbnailUploadInputValue"] !== undefined) {
+    thumbnailPreviewElement.classList.remove("removed");
+    thumbnailPreviewTextElement.classList.add("removed");
 
-    imagePreviewElement.src = result["imageInputValue"];
+    thumbnailPreviewElement.src = result["thumbnailUploadInputValue"];
   }
 });
 chrome.storage.local.get("imageSourceValue", result => {
   switch (result["imageSourceValue"]) {
     case "url":
       imageURLRadioElement.checked = true;
-      imageUploadAreaElement.classList.add("removed");
+      thumbnailUploadAreaElement.classList.add("removed");
       break;
     case "image":
       imageLocalRadioElement.checked = true;
-      thumbnailInputLabelElement.classList.add("removed");
+      thumbnailURLInputLabelElement.classList.add("removed");
       break;
     default:
       imageLocalRadioElement.checked = true;
-      thumbnailInputLabelElement.classList.add("removed");
+      thumbnailURLInputLabelElement.classList.add("removed");
       break;
   }
 });
 
-//starting to listen to all changes to inputs and updating details in video
+//starting to listen to all changes in inputs and updating details in video
 const listenToChangesAndUpdateStorage = (element, valueName) => {
   element.addEventListener("input", async () => {
     chrome.storage.local.set({ [valueName]: element.value }, () => {});
@@ -128,7 +129,7 @@ const listenToChangesUpdateStorageAndRemoveElement = (element, valueName, toggle
   });
 };
 
-listenToChangesAndUpdateStorage(thumbnailInputElement, "thumbnailInputValue");
+listenToChangesAndUpdateStorage(thumbnailURLInputElement, "thumbnailURLInputValue");
 listenToChangesAndUpdateStorage(titleInputElement, "titleInputValue");
 listenToChangesAndUpdateStorage(channelNameInputElement, "channelNameInputValue");
 listenToChangesAndUpdateStorage(numInputElement, "numInputValue");
@@ -136,7 +137,7 @@ listenToChangesAndUpdateStorage(numInputElement, "numInputValue");
 listenToChangesUpdateStorageAndRemoveElement(
   useDefaultAvatarCheckboxElement,
   "useDefaultAvatarCheckboxValue",
-  avatarPreviewElement,
+  avatarUploadAreaElement,
   true
 );
 listenToChangesUpdateStorageAndRemoveElement(
@@ -151,11 +152,11 @@ imageSourceRadios.forEach(radio =>
     chrome.storage.local.set({ imageSourceValue: radio.value }, () => {});
 
     if (radio.value === "url") {
-      imageUploadAreaElement.classList.add("removed");
-      thumbnailInputLabelElement.classList.remove("removed");
+      thumbnailUploadAreaElement.classList.add("removed");
+      thumbnailURLInputLabelElement.classList.remove("removed");
     } else {
-      imageUploadAreaElement.classList.remove("removed");
-      thumbnailInputLabelElement.classList.add("removed");
+      thumbnailUploadAreaElement.classList.remove("removed");
+      thumbnailURLInputLabelElement.classList.add("removed");
     }
   })
 );
@@ -166,41 +167,41 @@ const preventDefaults = event => {
   event.stopPropagation();
 };
 ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => {
-  imageUploadAreaElement.addEventListener(eventName, preventDefaults);
+  thumbnailUploadAreaElement.addEventListener(eventName, preventDefaults);
 });
 
-imageUploadAreaElement.ondrop = event => {
-  imageInputElement.files = event.dataTransfer.files;
+thumbnailUploadAreaElement.ondrop = event => {
+  thumbnailUploadInputElement.files = event.dataTransfer.files;
 
-  updateImagePreview(imageInputElement.files[0]);
+  updatethumbnailPreview(thumbnailUploadInputElement.files[0]);
 };
 
-imageInputElement.addEventListener("change", event => updateImagePreview(event.target.files[0]));
-imagePreviewElement.addEventListener("contextmenu", event => removeImagePreview(event));
+thumbnailUploadInputElement.addEventListener("change", event => updatethumbnailPreview(event.target.files[0]));
+thumbnailPreviewElement.addEventListener("contextmenu", event => removethumbnailPreview(event));
 
-const removeImagePreview = event => {
+const removethumbnailPreview = event => {
   event.preventDefault();
-  imagePreviewElement.classList.add("removed");
-  imagePreviewText.classList.remove("removed");
-  imagePreviewElement.src = "";
+  thumbnailPreviewElement.classList.add("removed");
+  thumbnailPreviewTextElement.classList.remove("removed");
+  thumbnailPreviewElement.src = "";
 };
 
-const updateImagePreview = async file => {
+const updatethumbnailPreview = async file => {
   if (file) {
-    imagePreviewElement.classList.remove("removed");
-    imagePreviewText.classList.add("removed");
+    thumbnailPreviewElement.classList.remove("removed");
+    thumbnailPreviewTextElement.classList.add("removed");
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      imagePreviewElement.src = reader.result;
+      thumbnailPreviewElement.src = reader.result;
 
-      chrome.storage.local.set({ imageInputValue: reader.result }, () => {});
+      chrome.storage.local.set({ thumbnailUploadInputValue: reader.result }, () => {});
     };
 
     reader.readAsDataURL(file);
   } else {
-    imagePreviewElement.classList.add("removed");
-    imagePreviewText.classList.remove("removed");
+    thumbnailPreviewElement.classList.add("removed");
+    thumbnailPreviewTextElement.classList.remove("removed");
   }
 };
 
@@ -272,7 +273,7 @@ const applyChanges = async page => {
 
     if (isRandomPosition) {
       const maxRandomNumberBasedOnURL = {
-        home: 12,
+        home: 8,
         subs: 18,
         search: 4,
         video: 9,
@@ -298,10 +299,10 @@ const applyChanges = async page => {
     const isSourceOfImageIsURL = await getValueFromStorage("imageFromURLCheckboxValue");
 
     if (isSourceOfImageIsURL) {
-      const imageToUse = await getValueFromStorage("thumbnailInputValue");
+      const imageToUse = await getValueFromStorage("thumbnailURLInputValue");
       return imageToUse;
     } else {
-      const imageToUse = await getValueFromStorage("imageInputValue");
+      const imageToUse = await getValueFromStorage("thumbnailUploadInputValue");
       return imageToUse;
     }
   };

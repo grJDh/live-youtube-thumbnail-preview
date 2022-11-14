@@ -71,23 +71,25 @@ label input {
   font-size: 20px;
 }
 
-#imageUploadArea {
+.upload-area {
   border: 2px dashed #ccc;
+  overflow: hidden;
+  cursor: pointer;
+}
+.upload-area:hover {
+  background-color: darkgrey;
+}
+.upload-area:active {
+  background-color: grey;
+}
+
+#thumbnailUploadArea {
   border-radius: 20px;
 
   height: 200px;
   width: 100%;
-
-  overflow: hidden;
-  cursor: pointer;
 }
-#imageUploadArea:hover {
-  background-color: darkgrey;
-}
-#imageUploadArea:active {
-  background-color: grey;
-}
-#imagePreview {
+#thumbnailPreview {
   height: 200px;
 }
 
@@ -191,7 +193,7 @@ input[type="checkbox"]:checked + .switch-slider:before {
   align-items: flex-end;
 }
 
-#avatarPreview {
+#avatarUploadArea {
   width: 50px;
   height: 50px;
   border: black 1px dotted;
@@ -201,7 +203,7 @@ input[type="checkbox"]:checked + .switch-slider:before {
   margin-bottom: -3px;
 }
 
-#avatarPreview:not(.removed) + #channelNameLabel {
+#avatarUploadArea:not(.removed) + #channelNameLabel {
   flex-grow: 1;
   width: auto;
 }

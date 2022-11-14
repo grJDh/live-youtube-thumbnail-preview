@@ -36,31 +36,31 @@
         </label>
       </div>
 
-      <label id="thumbnailInputLabel">
+      <label id="thumbnailURLInputLabel">
         Thumbnail
         <input
-          id="thumbnailInput"
+          id="thumbnailURLInput"
           type="text"
         />
       </label>
 
       <label
-        id="imageUploadArea"
-        class="flex-center"
+        id="thumbnailUploadArea"
+        class="flex-center upload-area"
       >
         <input
           class="removed"
-          id="imageInput"
+          id="thumbnailUploadInput"
           type="file"
           accept="image/*"
         />
         <img
           class="removed"
-          id="imagePreview"
+          id="thumbnailPreview"
           src="#"
           alt="Your Preview"
         />
-        <p id="imagePreviewText">Drop your preview here!</p>
+        <p id="thumbnailPreviewText">Drop your preview here!</p>
       </label>
 
       <label class="mt-5">
@@ -72,10 +72,25 @@
       </label>
 
       <div class="flex-center align-end">
-        <div
-          id="avatarPreview"
-          class=""
-        ></div>
+        <label
+          id="avatarUploadArea"
+          class="flex-center upload-area"
+        >
+          <input
+            class="removed"
+            id="avatarInput"
+            type="file"
+            accept="image/*"
+          />
+          <img
+            class="removed"
+            id="avatarPreview"
+            src="#"
+            alt="Your avatar preview"
+          />
+          <p id="avatarPreviewText">Avatar</p>
+        </label>
+
         <label
           id="channelNameLabel"
           class="mt-5"
