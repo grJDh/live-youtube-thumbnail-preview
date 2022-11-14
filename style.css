@@ -179,10 +179,29 @@ input[type="radio"]:checked + .img-or-url-label {
   border-radius: 50px;
 }
 
-input:checked + .switch-slider {
+input[type="checkbox"]:checked + .switch-slider {
   background-color: lightblue;
 }
 
-input:checked + .switch-slider:before {
+input[type="checkbox"]:checked + .switch-slider:before {
   transform: translateX(17px);
+}
+
+.align-end {
+  align-items: flex-end;
+}
+
+#avatarPreview {
+  width: 50px;
+  height: 50px;
+  border: black 1px dotted;
+  border-radius: 50px;
+  box-sizing: border-box;
+  margin-right: 10px;
+  margin-bottom: -3px;
+}
+
+#avatarPreview:not(.removed) + #channelNameLabel {
+  flex-grow: 1;
+  width: auto;
 }

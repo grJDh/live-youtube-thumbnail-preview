@@ -71,13 +71,22 @@
         />
       </label>
 
-      <label class="mt-5">
-        Channel Name
-        <input
-          id="channelNameInput"
-          type="text"
-        />
-      </label>
+      <div class="flex-center align-end">
+        <div
+          id="avatarPreview"
+          class=""
+        ></div>
+        <label
+          id="channelNameLabel"
+          class="mt-5"
+        >
+          Channel Name
+          <input
+            id="channelNameInput"
+            type="text"
+          />
+        </label>
+      </div>
 
       <div class="flex-center switch-wrapper mt-5">
         <!-- <label class="switch-label">
@@ -91,12 +100,6 @@
 
         <label class="switch-label -mt-5">
           <p>Use avatar from current user</p>
-          <p
-            id="lol"
-            class="removed"
-          >
-            Use avatar from current user
-          </p>
           <input
             id="useDefaultAvatarCheckbox"
             type="checkbox"

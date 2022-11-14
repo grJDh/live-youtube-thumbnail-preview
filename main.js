@@ -31,12 +31,12 @@ const channelNameInputElement = document.getElementById("channelNameInput");
 const numInputLabelElement = document.getElementById("numInputLabel");
 const numInputElement = document.getElementById("numInput");
 const useDefaultAvatarCheckboxElement = document.getElementById("useDefaultAvatarCheckbox");
+const avatarPreviewElement = document.getElementById("avatarPreview");
 const randomPositionCheckboxElement = document.getElementById("randomPositionCheckbox");
 // const badgeCheckboxElement = document.getElementById("badgeCheckbox");
 const imageSourceRadios = document.querySelectorAll('input[name="imageSource"]');
 const imageLocalRadioElement = document.getElementById("imageLocalRadio");
 const imageURLRadioElement = document.getElementById("imageURLRadio");
-const lol = document.getElementById("lol");
 
 //placing previous/default values from storage to inputs
 const readValueFromStorageAndPlaceDefaultValue = (valueName, element, defaultValue = "") => {
@@ -45,9 +45,15 @@ const readValueFromStorageAndPlaceDefaultValue = (valueName, element, defaultVal
     else element.defaultValue = result[valueName];
   });
 };
-const readValueFromStorageAndToggleRemoved = (valueName, element, toggledElement, remove = true) => {
+const readValueFromStorageAndToggleRemoved = (
+  valueName,
+  element,
+  toggledElement,
+  defaultValue = false,
+  remove = true
+) => {
   chrome.storage.local.get(valueName, result => {
-    if (result[valueName] === undefined) element.checked = false;
+    if (result[valueName] === undefined) element.checked = defaultValue;
     else element.checked = result[valueName];
 
     if (element.checked) {
@@ -62,30 +68,21 @@ readValueFromStorageAndPlaceDefaultValue("titleInputValue", titleInputElement, "
 readValueFromStorageAndPlaceDefaultValue("channelNameInputValue", channelNameInputElement, "");
 readValueFromStorageAndPlaceDefaultValue("numInputValue", numInputElement, "3");
 
-readValueFromStorageAndToggleRemoved("useDefaultAvatarCheckboxValue", useDefaultAvatarCheckboxElement, lol, false);
+readValueFromStorageAndToggleRemoved(
+  "useDefaultAvatarCheckboxValue",
+  useDefaultAvatarCheckboxElement,
+  avatarPreviewElement,
+  true,
+  true
+);
 readValueFromStorageAndToggleRemoved(
   "randomPositionCheckboxValue",
   randomPositionCheckboxElement,
   numInputLabelElement,
+  false,
   true
 );
 
-// chrome.storage.local.get("useDefaultAvatarCheckboxValue", result => {
-//   if (result["useDefaultAvatarCheckboxValue"] === undefined) useDefaultAvatarCheckboxElement.checked = false;
-//   else useDefaultAvatarCheckboxElement.checked = result["useDefaultAvatarCheckboxValue"];
-
-//   if (useDefaultAvatarCheckboxElement.checked) lol.classList.remove("removed");
-// });
-// chrome.storage.local.get("randomPositionCheckboxValue", result => {
-//   if (result["randomPositionCheckboxValue"] === undefined) randomPositionCheckboxElement.checked = false;
-//   else randomPositionCheckboxElement.checked = result["randomPositionCheckboxValue"];
-
-//   if (randomPositionCheckboxElement.checked) numInputLabelElement.classList.add("removed");
-// });
-// chrome.storage.local.get("badgeCheckboxValue", result => {
-//   if (result["badgeCheckboxValue"] === undefined) badgeCheckboxElement.checked = false;
-//   else badgeCheckboxElement.checked = result["badgeCheckboxValue"];
-// });
 chrome.storage.local.get("imageInputValue", result => {
   if (result["imageInputValue"] !== undefined) {
     imagePreviewElement.classList.remove("removed");
@@ -122,11 +119,11 @@ const listenToChangesUpdateStorageAndRemoveElement = (element, valueName, toggle
     chrome.storage.local.set({ [valueName]: element.checked }, () => {});
 
     if (remove) {
-      if (element.checked) toggledElement.classList.remove("removed");
-      else toggledElement.classList.add("removed");
-    } else {
       if (element.checked) toggledElement.classList.add("removed");
       else toggledElement.classList.remove("removed");
+    } else {
+      if (element.checked) toggledElement.classList.remove("removed");
+      else toggledElement.classList.add("removed");
     }
   });
 };
@@ -139,44 +136,16 @@ listenToChangesAndUpdateStorage(numInputElement, "numInputValue");
 listenToChangesUpdateStorageAndRemoveElement(
   useDefaultAvatarCheckboxElement,
   "useDefaultAvatarCheckboxValue",
-  lol,
+  avatarPreviewElement,
   true
 );
 listenToChangesUpdateStorageAndRemoveElement(
   randomPositionCheckboxElement,
   "randomPositionCheckboxValue",
   numInputLabelElement,
-  false
+  true
 );
 
-// thumbnailInputElement.addEventListener("input", async () => {
-//   chrome.storage.local.set({ thumbnailInputValue: thumbnailInputElement.value }, () => {});
-// });
-// titleInputElement.addEventListener("input", async () => {
-//   chrome.storage.local.set({ titleInputValue: titleInputElement.value }, () => {});
-// });
-// channelNameInputElement.addEventListener("input", async () => {
-//   chrome.storage.local.set({ channelNameInputValue: channelNameInputElement.value }, () => {});
-// });
-// numInputElement.addEventListener("input", async () => {
-//   chrome.storage.local.set({ numInputValue: numInputElement.value }, () => {});
-// });
-// useDefaultAvatarCheckboxElement.addEventListener("input", async () => {
-//   chrome.storage.local.set({ useDefaultAvatarCheckboxValue: useDefaultAvatarCheckboxElement.checked }, () => {});
-
-//   if (useDefaultAvatarCheckboxElement.checked) lol.classList.remove("removed");
-//   else lol.classList.add("removed");
-// });
-// randomPositionCheckboxElement.addEventListener("input", async () => {
-//   chrome.storage.local.set({ randomPositionCheckboxValue: randomPositionCheckboxElement.checked }, () => {});
-
-//   if (randomPositionCheckboxElement.checked) numInputLabelElement.classList.add("removed");
-//   else numInputLabelElement.classList.remove("removed");
-// });
-
-// badgeCheckboxElement.addEventListener("input", async () => {
-//   chrome.storage.local.set({ badgeCheckboxValue: badgeCheckboxElement.checked }, () => {});
-// });
 imageSourceRadios.forEach(radio =>
   radio.addEventListener("input", async () => {
     chrome.storage.local.set({ imageSourceValue: radio.value }, () => {});
