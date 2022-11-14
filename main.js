@@ -26,27 +26,36 @@ const thumbnailURLInputLabelElement = document.getElementById("thumbnailURLInput
 const thumbnailUploadAreaElement = document.getElementById("thumbnailUploadArea");
 const thumbnailUploadInputElement = document.getElementById("thumbnailUploadInput");
 const thumbnailPreviewElement = document.getElementById("thumbnailPreview");
-const thumbnailPreviewTextElement = document.getElementById("thumbnailPreviewText");
+// const thumbnailPreviewTextElement = document.getElementById("thumbnailPreviewText");
+
 const titleInputElement = document.getElementById("titleInput");
+
 const channelNameInputElement = document.getElementById("channelNameInput");
+
 const numInputLabelElement = document.getElementById("numInputLabel");
 const numInputElement = document.getElementById("numInput");
-const useDefaultAvatarCheckboxElement = document.getElementById("useDefaultAvatarCheckbox");
+
 const avatarUploadAreaElement = document.getElementById("avatarUploadArea");
+const avatarUploadInputElement = document.getElementById("avatarUploadInput");
+const avatarPreviewElement = document.getElementById("avatarPreview");
+
+const useDefaultAvatarCheckboxElement = document.getElementById("useDefaultAvatarCheckbox");
 const randomPositionCheckboxElement = document.getElementById("randomPositionCheckbox");
 // const badgeCheckboxElement = document.getElementById("badgeCheckbox");
+
 const imageSourceRadios = document.querySelectorAll('input[name="imageSource"]');
 const imageLocalRadioElement = document.getElementById("imageLocalRadio");
 const imageURLRadioElement = document.getElementById("imageURLRadio");
+const applyChangesButtonElement = document.getElementById("applyChangesButton");
 
 //placing previous/default values from storage to inputs
-const readValueFromStorageAndPlaceDefaultValue = (valueName, element, defaultValue = "") => {
+const readInputValueFromStorageAndPlaceDefaultValue = (valueName, element, defaultValue = "") => {
   chrome.storage.local.get(valueName, result => {
     if (result[valueName] === undefined) element.defaultValue = defaultValue;
     else element.defaultValue = result[valueName];
   });
 };
-const readValueFromStorageAndToggleRemoved = (
+const readCheckboxValueFromStorageAndToggleRemoved = (
   valueName,
   element,
   toggledElement,
@@ -63,20 +72,29 @@ const readValueFromStorageAndToggleRemoved = (
     }
   });
 };
+const readImageValueFromStorageAndPlaceItInImageSrc = (valueName, element) => {
+  chrome.storage.local.get(valueName, result => {
+    if (result[valueName] !== undefined) {
+      element.classList.remove("removed");
 
-readValueFromStorageAndPlaceDefaultValue("thumbnailURLInputValue", thumbnailURLInputElement, "");
-readValueFromStorageAndPlaceDefaultValue("titleInputValue", titleInputElement, "");
-readValueFromStorageAndPlaceDefaultValue("channelNameInputValue", channelNameInputElement, "");
-readValueFromStorageAndPlaceDefaultValue("numInputValue", numInputElement, "3");
+      element.src = result[valueName];
+    }
+  });
+};
 
-readValueFromStorageAndToggleRemoved(
+readInputValueFromStorageAndPlaceDefaultValue("thumbnailURLInputValue", thumbnailURLInputElement, "");
+readInputValueFromStorageAndPlaceDefaultValue("titleInputValue", titleInputElement, "");
+readInputValueFromStorageAndPlaceDefaultValue("channelNameInputValue", channelNameInputElement, "");
+readInputValueFromStorageAndPlaceDefaultValue("numInputValue", numInputElement, "3");
+
+readCheckboxValueFromStorageAndToggleRemoved(
   "useDefaultAvatarCheckboxValue",
   useDefaultAvatarCheckboxElement,
   avatarUploadAreaElement,
   true,
   true
 );
-readValueFromStorageAndToggleRemoved(
+readCheckboxValueFromStorageAndToggleRemoved(
   "randomPositionCheckboxValue",
   randomPositionCheckboxElement,
   numInputLabelElement,
@@ -84,14 +102,9 @@ readValueFromStorageAndToggleRemoved(
   true
 );
 
-chrome.storage.local.get("thumbnailUploadInputValue", result => {
-  if (result["thumbnailUploadInputValue"] !== undefined) {
-    thumbnailPreviewElement.classList.remove("removed");
-    thumbnailPreviewTextElement.classList.add("removed");
+readImageValueFromStorageAndPlaceItInImageSrc("thumbnailUploadInputValue", thumbnailPreviewElement);
+readImageValueFromStorageAndPlaceItInImageSrc("avatarUploadInputValue", avatarPreviewElement);
 
-    thumbnailPreviewElement.src = result["thumbnailUploadInputValue"];
-  }
-});
 chrome.storage.local.get("imageSourceValue", result => {
   switch (result["imageSourceValue"]) {
     case "url":
@@ -168,45 +181,55 @@ const preventDefaults = event => {
 };
 ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => {
   thumbnailUploadAreaElement.addEventListener(eventName, preventDefaults);
+  avatarUploadAreaElement.addEventListener(eventName, preventDefaults);
 });
 
-thumbnailUploadAreaElement.ondrop = event => {
-  thumbnailUploadInputElement.files = event.dataTransfer.files;
-
-  updatethumbnailPreview(thumbnailUploadInputElement.files[0]);
-};
-
-thumbnailUploadInputElement.addEventListener("change", event => updatethumbnailPreview(event.target.files[0]));
-thumbnailPreviewElement.addEventListener("contextmenu", event => removethumbnailPreview(event));
-
-const removethumbnailPreview = event => {
-  event.preventDefault();
-  thumbnailPreviewElement.classList.add("removed");
-  thumbnailPreviewTextElement.classList.remove("removed");
-  thumbnailPreviewElement.src = "";
-};
-
-const updatethumbnailPreview = async file => {
+const updatePreview = async (file, value, element) => {
   if (file) {
-    thumbnailPreviewElement.classList.remove("removed");
-    thumbnailPreviewTextElement.classList.add("removed");
+    element.classList.remove("removed");
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      thumbnailPreviewElement.src = reader.result;
+      element.src = reader.result;
 
-      chrome.storage.local.set({ thumbnailUploadInputValue: reader.result }, () => {});
+      chrome.storage.local.set({ [value]: reader.result }, () => {});
     };
 
     reader.readAsDataURL(file);
   } else {
-    thumbnailPreviewElement.classList.add("removed");
-    thumbnailPreviewTextElement.classList.remove("removed");
+    element.classList.add("removed");
   }
 };
+const removePreview = (event, element) => {
+  event.preventDefault();
+  element.classList.add("removed");
+  element.src = "";
+};
+
+thumbnailUploadAreaElement.ondrop = event => {
+  thumbnailUploadInputElement.files = event.dataTransfer.files;
+
+  updatePreview(thumbnailUploadInputElement.files[0], "thumbnailUploadInputValue", thumbnailPreviewElement);
+};
+
+avatarUploadAreaElement.ondrop = event => {
+  avatarUploadInputElement.files = event.dataTransfer.files;
+
+  updatePreview(avatarUploadInputElement.files[0], "avatarUploadInputValue", avatarPreviewElement);
+};
+
+thumbnailUploadInputElement.addEventListener("change", event =>
+  updatePreview(event.target.files[0], "thumbnailUploadInputValue", thumbnailPreviewElement)
+);
+thumbnailPreviewElement.addEventListener("contextmenu", event => removePreview(event, thumbnailPreviewElement));
+
+avatarUploadInputElement.addEventListener("change", event =>
+  updatePreview(event.target.files[0], "avatarUploadInputValue", avatarPreviewElement)
+);
+avatarPreviewElement.addEventListener("contextmenu", event => removePreview(event, avatarPreviewElement));
 
 //applying changes to video on click
-applyChangesButton.addEventListener("click", async () => {
+applyChangesButtonElement.addEventListener("click", async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   let page = "";
 
@@ -214,7 +237,8 @@ applyChangesButton.addEventListener("click", async () => {
   if (tab.url.includes("https://www.youtube.com/watch?v=")) page = "video";
   else if (tab.url.includes("https://www.youtube.com/feed/subscriptions")) page = "subs";
   else if (tab.url.includes("https://www.youtube.com/results?search_query=")) page = "search";
-  else if (tab.url === "https://www.youtube.com/") page = "home";
+  // else if (tab.url === "https://www.youtube.com/") page = "home";
+  else page = "home";
 
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
