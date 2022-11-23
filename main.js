@@ -1,10 +1,10 @@
 //if popup is opened at wrong url, display warning message
 const checkURL = async () => {
   const validURLs = [
-    "https://www.youtube.com/",
-    "https://www.youtube.com/feed/subscriptions",
-    "https://www.youtube.com/results?search_query=",
-    "https://www.youtube.com/watch?v=",
+    "youtube.com/",
+    "youtube.com/feed/subscriptions",
+    "youtube.com/results?search_query=",
+    "youtube.com/watch?v=",
   ];
 
   //add mobile url
@@ -245,10 +245,9 @@ applyChangesButtonElement.addEventListener("click", async () => {
   let page = "";
 
   //what youtube page is user on?
-  if (tab.url.includes("https://www.youtube.com/watch?v=")) page = "video";
-  else if (tab.url.includes("https://www.youtube.com/feed/subscriptions")) page = "subs";
-  else if (tab.url.includes("https://www.youtube.com/results?search_query=")) page = "search";
-  // else if (tab.url === "https://www.youtube.com/") page = "home";
+  if (tab.url.includes("youtube.com/watch?v=")) page = "video";
+  else if (tab.url.includes("youtube.com/feed/subscriptions")) page = "subs";
+  else if (tab.url.includes("youtube.com/results?search_query=")) page = "search";
   else page = "home";
 
   chrome.scripting.executeScript({
@@ -330,6 +329,7 @@ const applyChanges = async page => {
     }
   };
 
+  //do we use uploaded image or from an URL?
   const returnImageToUse = async () => {
     const isSourceOfImageIsURL = await getValueFromStorage("imageFromURLCheckboxValue");
 
@@ -342,6 +342,7 @@ const applyChanges = async page => {
     }
   };
 
+  //do we use uploaded avatar or from current user?
   const returnAvatarToUse = async () => {
     const useDefaultAvatar = await getValueFromStorage("useDefaultAvatarCheckboxValue");
 
@@ -363,7 +364,7 @@ const applyChanges = async page => {
   let thumbnail = undefined;
   let channelName = undefined;
 
-  //finding components of the video
+  //finding all components of the video
   if (page === "home") {
     videoDiv = document.querySelectorAll("ytd-rich-grid-media")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0].children[0];
@@ -406,6 +407,7 @@ const applyChanges = async page => {
   channelName.textContent = await getValueFromStorage("channelNameInputValue");
   avatar.src = avatarImage;
 
+  //placing or removing badge
   const showBadge = await getValueFromStorage("badgeCheckboxValue");
   let badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
   let badgeWrapper = videoDiv.querySelector("#byline-container");
