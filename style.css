@@ -86,7 +86,11 @@ label input {
   background-color: grey;
 }
 
-.upload-area > img:not(.removed) + p {
+#avatarUploadArea > .emptyPreviewText {
+  font-size: 9px;
+}
+
+.upload-area > img:not(.removed) + .emptyPreviewText {
   display: none;
 }
 
@@ -95,9 +99,41 @@ label input {
 
   height: 200px;
   width: 100%;
+
+  position: relative;
+
+  font-size: 24px;
 }
 #thumbnailPreview {
   height: 200px;
+}
+
+#hoverPreviewText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%) translateY(-50%);
+
+  width: 100%;
+  font-size: 28px;
+
+  color: white;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+
+  display: none;
+}
+
+#hoverPreviewText > p {
+  margin: 0;
+}
+
+#thumbnailUploadArea:hover > img:not(.removed) ~ #hoverPreviewText {
+  display: block;
+}
+
+#thumbnailUploadArea:hover > img {
+  opacity: 0.5;
 }
 
 #applyChangesButton {
@@ -134,10 +170,6 @@ input[type="radio"]:checked + .img-or-url-label {
   background-color: lightblue;
   transition: all 0.5s;
 }
-
-/* .img-or-url-label input:checked + .radio-name {
-  text-decoration: underline;
-} */
 
 .switch-wrapper {
   flex-direction: column;
@@ -220,5 +252,5 @@ input[type="checkbox"]:checked + .switch-slider:before {
 }
 
 #avatarPreview {
-  scale: 5%;
+  width: 50px;
 }

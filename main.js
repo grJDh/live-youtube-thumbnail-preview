@@ -27,6 +27,7 @@ const thumbnailUploadAreaElement = document.getElementById("thumbnailUploadArea"
 const thumbnailUploadInputElement = document.getElementById("thumbnailUploadInput");
 const thumbnailPreviewElement = document.getElementById("thumbnailPreview");
 // const thumbnailPreviewTextElement = document.getElementById("thumbnailPreviewText");
+const hoverPreviewTextElement = document.getElementById("hoverPreviewText");
 
 const titleInputElement = document.getElementById("titleInput");
 
@@ -211,7 +212,6 @@ thumbnailUploadAreaElement.ondrop = event => {
 
   updatePreview(thumbnailUploadInputElement.files[0], "thumbnailUploadInputValue", thumbnailPreviewElement);
 };
-
 avatarUploadAreaElement.ondrop = event => {
   avatarUploadInputElement.files = event.dataTransfer.files;
 
@@ -222,6 +222,7 @@ thumbnailUploadInputElement.addEventListener("change", event =>
   updatePreview(event.target.files[0], "thumbnailUploadInputValue", thumbnailPreviewElement)
 );
 thumbnailPreviewElement.addEventListener("contextmenu", event => removePreview(event, thumbnailPreviewElement));
+hoverPreviewTextElement.addEventListener("contextmenu", event => removePreview(event, thumbnailPreviewElement));
 
 avatarUploadInputElement.addEventListener("change", event =>
   updatePreview(event.target.files[0], "avatarUploadInputValue", avatarPreviewElement)

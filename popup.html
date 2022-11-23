@@ -60,15 +60,11 @@
           src="#"
           alt="Your Preview"
         />
-        <p id="thumbnailPreviewText">Drop your thumbnail here!</p>
-      </label>
-
-      <label class="mt-5">
-        Video Title
-        <input
-          id="titleInput"
-          type="text"
-        />
+        <p class="emptyPreviewText">Drop your thumbnail here!</p>
+        <div id="hoverPreviewText">
+          <p>LMB - upload new image</p>
+          <p>RMB - remove image</p>
+        </div>
       </label>
 
       <div class="flex-center align-end">
@@ -88,20 +84,28 @@
             src="#"
             alt="Your avatar preview"
           />
-          <p id="avatarPreviewText">Drop your avatar here!</p>
+          <p class="emptyPreviewText">Drop your avatar here!</p>
         </label>
 
-        <label
-          id="channelNameLabel"
-          class="mt-5"
-        >
-          Channel Name
+        <label class="mt-5">
+          Video Title
           <input
-            id="channelNameInput"
+            id="titleInput"
             type="text"
           />
         </label>
       </div>
+
+      <label
+        id="channelNameLabel"
+        class="mt-5"
+      >
+        Channel Name
+        <input
+          id="channelNameInput"
+          type="text"
+        />
+      </label>
 
       <div class="flex-center switch-wrapper mt-5">
         <!-- <label class="switch-label">
