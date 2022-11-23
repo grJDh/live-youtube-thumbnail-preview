@@ -408,14 +408,17 @@ const applyChanges = async page => {
 
   const showBadge = await getValueFromStorage("badgeCheckboxValue");
   let badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
+  let badgeWrapper = videoDiv.querySelector("#byline-container");
+
   if (showBadge) {
-    let badgeWrapper = videoDiv.querySelector("#byline-container");
-    const badgeIcon = document.createElement("img");
-    badgeIcon.src = chrome.runtime.getURL("badge.svg");
-    badgeIcon.style.width = "16px";
-    badgeIcon.style.marginLeft = "4px";
-    badgeIcon.style.marginTop = "2px";
-    badgeWrapper.appendChild(badgeIcon);
+    if (!badge && badgeWrapper.getElementsByTagName("img").length === 0) {
+      const badgeIcon = document.createElement("img");
+      badgeIcon.src = chrome.runtime.getURL("badge.svg");
+      badgeIcon.style.width = "16px";
+      badgeIcon.style.marginLeft = "4px";
+      badgeIcon.style.marginTop = "2px";
+      badgeWrapper.appendChild(badgeIcon);
+    }
   } else {
     badge.style.visibility = "hidden";
   }
