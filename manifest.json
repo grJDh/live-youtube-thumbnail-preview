@@ -15,5 +15,11 @@
     "default_icon": {
       "128": "images/icon128.png"
     }
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["badge.svg"],
+      "matches": ["https://www.youtube.com/*", "https://m.youtube.com/*"]
+    }
+  ]
 }

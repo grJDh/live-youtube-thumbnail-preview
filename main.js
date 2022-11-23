@@ -7,6 +7,8 @@ const checkURL = async () => {
     "https://www.youtube.com/watch?v=",
   ];
 
+  //add mobile url
+
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const matches = validURLs.filter(url => tab.url.includes(url));
 
@@ -40,9 +42,9 @@ const avatarUploadAreaElement = document.getElementById("avatarUploadArea");
 const avatarUploadInputElement = document.getElementById("avatarUploadInput");
 const avatarPreviewElement = document.getElementById("avatarPreview");
 
+const badgeCheckboxElement = document.getElementById("badgeCheckbox");
 const useDefaultAvatarCheckboxElement = document.getElementById("useDefaultAvatarCheckbox");
 const randomPositionCheckboxElement = document.getElementById("randomPositionCheckbox");
-// const badgeCheckboxElement = document.getElementById("badgeCheckbox");
 
 const imageSourceRadios = document.querySelectorAll('input[name="imageSource"]');
 const imageLocalRadioElement = document.getElementById("imageLocalRadio");
@@ -122,6 +124,10 @@ chrome.storage.local.get("imageSourceValue", result => {
       break;
   }
 });
+chrome.storage.local.get("badgeCheckboxValue", result => {
+  if (result["badgeCheckboxValue"] === undefined) badgeCheckboxElement.checked = false;
+  else badgeCheckboxElement.checked = result["badgeCheckboxValue"];
+});
 
 //starting to listen to all changes in inputs and updating details in video
 const listenToChangesAndUpdateStorage = (element, valueName) => {
@@ -147,6 +153,7 @@ listenToChangesAndUpdateStorage(thumbnailURLInputElement, "thumbnailURLInputValu
 listenToChangesAndUpdateStorage(titleInputElement, "titleInputValue");
 listenToChangesAndUpdateStorage(channelNameInputElement, "channelNameInputValue");
 listenToChangesAndUpdateStorage(numInputElement, "numInputValue");
+listenToChangesAndUpdateStorage(badgeCheckboxElement, "badgeCheckboxValue");
 
 listenToChangesUpdateStorageAndRemoveElement(
   useDefaultAvatarCheckboxElement,
@@ -161,6 +168,9 @@ listenToChangesUpdateStorageAndRemoveElement(
   true
 );
 
+badgeCheckboxElement.addEventListener("input", async () => {
+  chrome.storage.local.set({ ["badgeCheckboxValue"]: badgeCheckboxElement.checked }, () => {});
+});
 imageSourceRadios.forEach(radio =>
   radio.addEventListener("input", async () => {
     chrome.storage.local.set({ imageSourceValue: radio.value }, () => {});
@@ -352,26 +362,20 @@ const applyChanges = async page => {
   let avatar = undefined;
   let thumbnail = undefined;
   let channelName = undefined;
-  let badgeWrapper = undefined;
-  let badge = undefined;
 
   //finding components of the video
   if (page === "home") {
     videoDiv = document.querySelectorAll("ytd-rich-grid-media")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0].children[0];
     avatar = videoDiv.children["details"].getElementsByTagName("a")[0].children[0].children[0];
-    thumbnail = videoDiv.getElementsByTagName("yt-img-shadow")[0].children[0];
+    thumbnail = videoDiv.getElementsByTagName("yt-image")[0].children[0];
     channelName =
       videoDiv.getElementsByTagName("ytd-channel-name")[0].children["container"].children["text-container"].children[0]
         .children[0];
-    // badgeWrapper = videoDiv
-    //   .getElementsByTagName("ytd-channel-name")[0]
-    //   .getElementsByTagName("ytd-badge-supported-renderer")[0];
-    // badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
   } else if (page === "subs") {
     videoDiv = document.querySelectorAll("ytd-grid-video-renderer")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0];
-    thumbnail = videoDiv.getElementsByTagName("yt-img-shadow")[0].children[0];
+    thumbnail = videoDiv.getElementsByTagName("yt-image")[0].children[0];
     channelName =
       videoDiv.getElementsByTagName("ytd-channel-name")[0].children["container"].children["text-container"].children[0]
         .children[0];
@@ -379,12 +383,12 @@ const applyChanges = async page => {
     videoDiv = document.querySelectorAll("ytd-video-renderer")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0];
     avatar = videoDiv.querySelectorAll("#channel-info")[0].querySelectorAll("yt-img-shadow")[0].children[0];
-    thumbnail = videoDiv.getElementsByTagName("yt-img-shadow")[0].children[0];
+    thumbnail = videoDiv.getElementsByTagName("yt-image")[0].children[0];
     channelName = videoDiv.querySelectorAll("#channel-info")[0].querySelectorAll("yt-formatted-string")[0].children[0];
   } else if (page === "video") {
     videoDiv = document.querySelectorAll("ytd-compact-video-renderer")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("span")[0];
-    thumbnail = videoDiv.getElementsByTagName("yt-img-shadow")[0].children[0];
+    thumbnail = videoDiv.getElementsByTagName("yt-image")[0].children[0];
     channelName = videoDiv.querySelectorAll("yt-formatted-string")[0];
   }
 
@@ -402,81 +406,17 @@ const applyChanges = async page => {
   channelName.textContent = await getValueFromStorage("channelNameInputValue");
   avatar.src = avatarImage;
 
-  // const showBadge = await getValueFromStorage("badgeCheckboxValue");
-  // if (showBadge) {
-  //   badgeWrapper.removeAttribute("hidden");
-  //   const badgeIcon = document.createElement("div");
-  //   badgeIcon.classList.add('badge', 'badge-style-type-verified', 'style-scope', 'ytd-badge-supported-renderer');
-  //   // <div><p>Hi!</p></div>
-  //   badgeIcon.innerHTML =
-  //     '<yt-icon class="style-scope ytd-badge-supported-renderer"><svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" style="pointer-events: none; display: block; width: 100%; height: 100%;" class="style-scope yt-icon"><g class="style-scope yt-icon"><path d="M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M9.8,17.3l-4.2-4.1L7,11.8l2.8,2.7L17,7.4 l1.4,1.4L9.8,17.3z" class="style-scope yt-icon"></path></g></svg></yt-icon><span class="style-scope ytd-badge-supported-renderer"></span><tp-yt-paper-tooltip position="top" class="style-scope ytd-badge-supported-renderer" role="tooltip" tabindex="-1" style="left: 60.075px; top: -4.5px;"><div id="tooltip" class="style-scope tp-yt-paper-tooltip hidden" style-target="tooltip">Подтверждено</div></tp-yt-paper-tooltip>';
-  //   // '<div class="badge badge-style-type-verified style-scope ytd-badge-supported-renderer" aria-label="Подтверждено"><yt-icon class="style-scope ytd-badge-supported-renderer"><svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" style="pointer-events: none; display: block; width: 100%; height: 100%;" class="style-scope yt-icon"><g class="style-scope yt-icon"><path d="M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M9.8,17.3l-4.2-4.1L7,11.8l2.8,2.7L17,7.4 l1.4,1.4L9.8,17.3z" class="style-scope yt-icon"></path></g></svg></yt-icon><span class="style-scope ytd-badge-supported-renderer"></span><tp-yt-paper-tooltip position="top" class="style-scope ytd-badge-supported-renderer" role="tooltip" tabindex="-1" style="left: 60.075px; top: -4.5px;"><div id="tooltip" class="style-scope tp-yt-paper-tooltip hidden" style-target="tooltip">Подтверждено</div></tp-yt-paper-tooltip></div>';
-  //   badgeWrapper.appendChild(badgeIcon);
-  // } else badge.style.visibility = "hidden";
-
-  // badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
+  const showBadge = await getValueFromStorage("badgeCheckboxValue");
+  let badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
+  if (showBadge) {
+    let badgeWrapper = videoDiv.querySelector("#byline-container");
+    const badgeIcon = document.createElement("img");
+    badgeIcon.src = chrome.runtime.getURL("badge.svg");
+    badgeIcon.style.width = "16px";
+    badgeIcon.style.marginLeft = "4px";
+    badgeIcon.style.marginTop = "2px";
+    badgeWrapper.appendChild(badgeIcon);
+  } else {
+    badge.style.visibility = "hidden";
+  }
 };
-
-// const badgeWrapper = document.querySelectorAll("ytd-rich-grid-media")[1].children["dismissible"].getElementsByTagName("ytd-channel-name")[0].getElementsByTagName("ytd-badge-supported-renderer")[0];
-// badgeWrapper.removeAttribute("hidden");
-
-{
-  /* <ytd-badge-supported-renderer class="style-scope ytd-channel-name" system-icons="">
-<div class="badge badge-style-type-verified style-scope ytd-badge-supported-renderer" aria-label="Подтверждено"><yt-icon class="style-scope ytd-badge-supported-renderer"><svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" style="pointer-events: none; display: block; width: 100%; height: 100%;" class="style-scope yt-icon"><g class="style-scope yt-icon"><path d="M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M9.8,17.3l-4.2-4.1L7,11.8l2.8,2.7L17,7.4 l1.4,1.4L9.8,17.3z" class="style-scope yt-icon"></path></g></svg></yt-icon><span class="style-scope ytd-badge-supported-renderer"></span><tp-yt-paper-tooltip position="top" class="style-scope ytd-badge-supported-renderer" role="tooltip" tabindex="-1" style="left: 45.9417px; top: -4.5px;"><div id="tooltip" class="style-scope tp-yt-paper-tooltip hidden" style-target="tooltip">
-  Подтверждено
-</div>
-</tp-yt-paper-tooltip></div><dom-repeat id="repeat" as="badge" class="style-scope ytd-badge-supported-renderer"><template is="dom-repeat"></template></dom-repeat></ytd-badge-supported-renderer>
-
-<ytd-badge-supported-renderer
-      class="style-scope ytd-channel-name"
-      system-icons=""
-    >
-      <div
-        class="badge badge-style-type-verified style-scope ytd-badge-supported-renderer"
-        aria-label="Подтверждено"
-      >
-        <yt-icon class="style-scope ytd-badge-supported-renderer"
-          ><svg
-            viewBox="0 0 24 24"
-            preserveAspectRatio="xMidYMid meet"
-            focusable="false"
-            style="pointer-events: none; display: block; width: 100%; height: 100%"
-            class="style-scope yt-icon"
-          >
-            <g class="style-scope yt-icon">
-              <path
-                d="M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M9.8,17.3l-4.2-4.1L7,11.8l2.8,2.7L17,7.4 l1.4,1.4L9.8,17.3z"
-                class="style-scope yt-icon"
-              ></path>
-            </g></svg></yt-icon
-        ><span class="style-scope ytd-badge-supported-renderer"></span
-        ><tp-yt-paper-tooltip
-          position="top"
-          class="style-scope ytd-badge-supported-renderer"
-          role="tooltip"
-          tabindex="-1"
-          style="left: 45.9417px; top: -4.5px"
-          ><div
-            id="tooltip"
-            class="style-scope tp-yt-paper-tooltip hidden"
-            style-target="tooltip"
-          >
-            Подтверждено
-          </div>
-        </tp-yt-paper-tooltip>
-      </div>
-      <dom-repeat
-        id="repeat"
-        as="badge"
-        class="style-scope ytd-badge-supported-renderer"
-        ><template is="dom-repeat"></template></dom-repeat
-    ></ytd-badge-supported-renderer>
-
-<svg viewBox="0 0 24 24" style="pointer-events:none;display:block;width:100%;height:100%" class="style-scope yt-icon"><g class="style-scope yt-icon"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zM9.8 17.3l-4.2-4.1L7 11.8l2.8 2.7L17 7.4l1.4 1.4-8.6 8.5z" class="style-scope yt-icon"/></g></svg>
-
-svg.setAttribute("viewBox", "0 0 24 24")
-svg.setAttribute("preserveAspectRatio", "xMidYMid meet")
-svg.setAttribute("focusable", "false")
-svg.setAttribute("style", "pointer-events: none; display: block; width: 100%; height: 100%;")
-svg.setAttribute("class", "style-scope yt-icon")  */
-}
