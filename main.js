@@ -1,3 +1,8 @@
+// chrome.storage.local.clear();
+
+//TODO: remove and place badge in video, subs and search
+//TODO: localization
+
 //if popup is opened at wrong url, display warning message
 const checkURL = async () => {
   const validURLs = [
@@ -54,8 +59,10 @@ const applyChangesButtonElement = document.getElementById("applyChangesButton");
 //placing previous/default values from storage to inputs
 const readInputValueFromStorageAndPlaceDefaultValue = (valueName, element, defaultValue = "") => {
   chrome.storage.local.get(valueName, result => {
-    if (result[valueName] === undefined) element.defaultValue = defaultValue;
-    else element.defaultValue = result[valueName];
+    if (result[valueName] === undefined) {
+      element.defaultValue = defaultValue;
+      chrome.storage.local.set({ [valueName]: defaultValue }, () => {});
+    } else element.defaultValue = result[valueName];
   });
 };
 const readCheckboxValueFromStorageAndToggleRemoved = (
@@ -66,8 +73,10 @@ const readCheckboxValueFromStorageAndToggleRemoved = (
   remove = true
 ) => {
   chrome.storage.local.get(valueName, result => {
-    if (result[valueName] === undefined) element.checked = defaultValue;
-    else element.checked = result[valueName];
+    if (result[valueName] === undefined) {
+      element.checked = defaultValue;
+      chrome.storage.local.set({ [valueName]: defaultValue }, () => {});
+    } else element.checked = result[valueName];
 
     if (element.checked) {
       if (remove) toggledElement.classList.add("removed");
@@ -79,8 +88,9 @@ const readImageValueFromStorageAndPlaceItInImageSrc = (valueName, element) => {
   chrome.storage.local.get(valueName, result => {
     if (result[valueName] !== undefined) {
       element.classList.remove("removed");
-
       element.src = result[valueName];
+    } else {
+      chrome.storage.local.set({ [valueName]: "" }, () => {});
     }
   });
 };
@@ -109,6 +119,7 @@ readImageValueFromStorageAndPlaceItInImageSrc("thumbnailUploadInputValue", thumb
 readImageValueFromStorageAndPlaceItInImageSrc("avatarUploadInputValue", avatarPreviewElement);
 
 chrome.storage.local.get("imageSourceValue", result => {
+  console.log(result);
   switch (result["imageSourceValue"]) {
     case "url":
       imageURLRadioElement.checked = true;
@@ -121,12 +132,17 @@ chrome.storage.local.get("imageSourceValue", result => {
     default:
       imageLocalRadioElement.checked = true;
       thumbnailURLInputLabelElement.classList.add("removed");
+      chrome.storage.local.set({ ["imageSourceValue"]: "image" }, () => {});
       break;
   }
 });
 chrome.storage.local.get("badgeCheckboxValue", result => {
-  if (result["badgeCheckboxValue"] === undefined) badgeCheckboxElement.checked = false;
-  else badgeCheckboxElement.checked = result["badgeCheckboxValue"];
+  if (result["badgeCheckboxValue"] === undefined) {
+    badgeCheckboxElement.checked = false;
+    chrome.storage.local.set({ ["badgeCheckboxValue"]: false }, () => {});
+  } else {
+    badgeCheckboxElement.checked = result["badgeCheckboxValue"];
+  }
 });
 
 //starting to listen to all changes in inputs and updating details in video
@@ -264,7 +280,8 @@ const applyChanges = async page => {
     return new Promise((resolve, reject) => {
       chrome.storage.local.get(key, result => {
         if (result[key] === undefined) {
-          reject("No value found");
+          console.error("No value found for " + key);
+          reject();
         } else {
           resolve(result[key]);
         }
@@ -301,20 +318,20 @@ const applyChanges = async page => {
     }
   };
 
+  const maxRandomNumberBasedOnURL = {
+    home: 8,
+    subs: 18,
+    search: 4,
+    video: 9,
+  };
+
   //returning either random index or selected by user
   const returnIndexOfVideo = async () => {
+    // console.log(111);
     const isRandomPosition = await getValueFromStorage("randomPositionCheckboxValue");
+    // console.log(222);
 
     if (isRandomPosition) {
-      const maxRandomNumberBasedOnURL = {
-        home: 8,
-        subs: 18,
-        search: 4,
-        video: 9,
-      };
-
-      // const allVideos = document.querySelectorAll("ytd-rich-grid-media");
-
       const randomIndex = Math.floor(Math.random() * maxRandomNumberBasedOnURL[page]);
 
       // await checkIfVideoIndexChanged(randomIndex);
@@ -331,15 +348,10 @@ const applyChanges = async page => {
 
   //do we use uploaded image or from an URL?
   const returnImageToUse = async () => {
-    const isSourceOfImageIsURL = await getValueFromStorage("imageFromURLCheckboxValue");
+    const imageSource = await getValueFromStorage("imageSourceValue");
 
-    if (isSourceOfImageIsURL) {
-      const imageToUse = await getValueFromStorage("thumbnailURLInputValue");
-      return imageToUse;
-    } else {
-      const imageToUse = await getValueFromStorage("thumbnailUploadInputValue");
-      return imageToUse;
-    }
+    if (imageSource === "url") return await getValueFromStorage("thumbnailURLInputValue");
+    else return await getValueFromStorage("thumbnailUploadInputValue");
   };
 
   //do we use uploaded avatar or from current user?
@@ -400,6 +412,8 @@ const applyChanges = async page => {
   //   channelName: channelName.textContent,
   //   avatar: avatar.src,
   // });
+
+  // console.log(videoDiv, thumbnail, title, channelName, avatar);
 
   //applying all fake changes to video
   thumbnail.src = whatImageToUse;
