@@ -69,6 +69,7 @@ const placeBadgeSwitchElement = document.getElementsByClassName("switch-label")[
 const avatarSourceSwitchElement = document.getElementsByClassName("switch-label")[1].getElementsByTagName("p")[0];
 const randomPositionSwitchElement = document.getElementsByClassName("switch-label")[2].getElementsByTagName("p")[0];
 const numInputLabelTextElement = document.getElementById("numInputLabelText");
+const wrongUrlTextElement = document.getElementById("wrongUrlText");
 
 imageLocalRadioLabelElement.textContent = chrome.i18n.getMessage("imageLocalRadioLabel");
 imageURLRadioLabelElement.textContent = chrome.i18n.getMessage("imageURLRadioLabel");
@@ -84,6 +85,7 @@ avatarSourceSwitchElement.textContent = chrome.i18n.getMessage("avatarSourceSwit
 randomPositionSwitchElement.textContent = chrome.i18n.getMessage("randomPositionSwitch");
 numInputLabelTextElement.textContent = chrome.i18n.getMessage("numInputLabelText");
 applyChangesButtonElement.textContent = chrome.i18n.getMessage("applyChangesButton");
+wrongUrlTextElement.textContent = chrome.i18n.getMessage("wrongUrlText");
 
 //placing previous/default values from storage to inputs
 const readInputValueFromStorageAndPlaceDefaultValue = (valueName, element, defaultValue = "") => {

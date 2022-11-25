@@ -52,5 +52,9 @@
 
   "applyChangesButton": {
     "message": "Apply"
+  },
+
+  "wrongUrlText": {
+    "message": "This extension works only on Youtube Home, Search, Subscriptions and Video pages!"
   }
 }
