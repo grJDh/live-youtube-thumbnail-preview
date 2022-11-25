@@ -1,0 +1,56 @@
+{
+  "extName": {
+    "message": "Youtube Thumbnail Previewer"
+  },
+  "extDesc": {
+    "message": "Blablabla1"
+  },
+
+  "imageLocalRadioLabel": {
+    "message": "Image"
+  },
+  "imageURLRadioLabel": {
+    "message": "URL"
+  },
+
+  "thumbnailURLInputLabel": {
+    "message": "Thumbnail"
+  },
+  "emptyPreviewTextThumbnail": {
+    "message": "Drop your thumbnail here!"
+  },
+  "emptyPreviewTextAvatar": {
+    "message": "Drop your avatar here!"
+  },
+  "hoverPreviewTextLMB": {
+    "message": "LMB - upload new image"
+  },
+  "hoverPreviewTextRMB": {
+    "message": "RMB - remove image"
+  },
+
+  "titleLabelText": {
+    "message": "Video Title"
+  },
+  "channelNameLabelText": {
+    "message": "Channel Name"
+  },
+
+  "placeBadgeSwitch": {
+    "message": "Place badge"
+  },
+  "avatarSourceSwitch": {
+    "message": "Use avatar from current user"
+  },
+  "randomPositionSwitch": {
+    "message": "Random position"
+  },
+
+  "numInputLabelText": {
+    "message": "Index of video to replace"
+  },
+
+  "applyChangesButton": {
+    "message": "Apply"
+  }
+}

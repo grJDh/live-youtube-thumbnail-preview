@@ -16,6 +16,7 @@
           value="image"
         />
         <label
+          id="imageLocalRadioLabel"
           for="imageLocalRadio"
           class="flex-center img-or-url-label"
         >
@@ -29,6 +30,7 @@
           value="url"
         />
         <label
+          id="imageURLRadioLabel"
           for="imageURLRadio"
           class="flex-center img-or-url-label"
         >
@@ -88,7 +90,7 @@
         </label>
 
         <label class="mt-5">
-          Video Title
+          <span id="titleLabelText">Video Title</span>
           <input
             id="titleInput"
             type="text"
@@ -96,11 +98,8 @@
         </label>
       </div>
 
-      <label
-        id="channelNameLabel"
-        class="mt-5"
-      >
-        Channel Name
+      <label class="mt-5">
+        <span id="channelNameLabelText">Channel Name</span>
         <input
           id="channelNameInput"
           type="text"
@@ -136,7 +135,7 @@
         </label>
 
         <label id="numInputLabel">
-          Index of video to replace
+          <span id="numInputLabelText">Index of video to replace</span>
           <input
             id="numInput"
             type="number"

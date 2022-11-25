@@ -1,7 +1,7 @@
 // chrome.storage.local.clear();
 
 //TODO: remove and place badge in video, subs and search
-//TODO: localization
+//TODO: if change video without badge and then exact video with badge, badg won't appear
 
 //if popup is opened at wrong url, display warning message
 const checkURL = async () => {
@@ -55,6 +55,34 @@ const imageSourceRadios = document.querySelectorAll('input[name="imageSource"]')
 const imageLocalRadioElement = document.getElementById("imageLocalRadio");
 const imageURLRadioElement = document.getElementById("imageURLRadio");
 const applyChangesButtonElement = document.getElementById("applyChangesButton");
+
+const imageLocalRadioLabelElement = document.getElementById("imageLocalRadioLabel");
+const imageURLRadioLabelElement = document.getElementById("imageURLRadioLabel");
+const emptyPreviewTextThumbnailElement = document.getElementsByClassName("emptyPreviewText")[0];
+const emptyPreviewTextAvatarElement = document.getElementsByClassName("emptyPreviewText")[1];
+const hoverPreviewTextLMBElement = document.getElementById("hoverPreviewText").getElementsByTagName("p")[0];
+const hoverPreviewTextRMBElement = document.getElementById("hoverPreviewText").getElementsByTagName("p")[1];
+const titleLabelTextElement = document.getElementById("titleLabelText");
+const channelNameLabelTextElement = document.getElementById("channelNameLabelText");
+const placeBadgeSwitchElement = document.getElementsByClassName("switch-label")[0].getElementsByTagName("p")[0];
+const avatarSourceSwitchElement = document.getElementsByClassName("switch-label")[1].getElementsByTagName("p")[0];
+const randomPositionSwitchElement = document.getElementsByClassName("switch-label")[2].getElementsByTagName("p")[0];
+const numInputLabelTextElement = document.getElementById("numInputLabelText");
+
+imageLocalRadioLabelElement.textContent = chrome.i18n.getMessage("imageLocalRadioLabel");
+imageURLRadioLabelElement.textContent = chrome.i18n.getMessage("imageURLRadioLabel");
+thumbnailURLInputLabelElement.textContent = chrome.i18n.getMessage("thumbnailURLInputLabel");
+emptyPreviewTextThumbnailElement.textContent = chrome.i18n.getMessage("emptyPreviewTextThumbnail");
+emptyPreviewTextAvatarElement.textContent = chrome.i18n.getMessage("emptyPreviewTextAvatar");
+hoverPreviewTextLMBElement.textContent = chrome.i18n.getMessage("hoverPreviewTextLMB");
+hoverPreviewTextRMBElement.textContent = chrome.i18n.getMessage("hoverPreviewTextRMB");
+titleLabelTextElement.textContent = chrome.i18n.getMessage("titleLabelText");
+channelNameLabelTextElement.textContent = chrome.i18n.getMessage("channelNameLabelText");
+placeBadgeSwitchElement.textContent = chrome.i18n.getMessage("placeBadgeSwitch");
+avatarSourceSwitchElement.textContent = chrome.i18n.getMessage("avatarSourceSwitch");
+randomPositionSwitchElement.textContent = chrome.i18n.getMessage("randomPositionSwitch");
+numInputLabelTextElement.textContent = chrome.i18n.getMessage("numInputLabelText");
+applyChangesButtonElement.textContent = chrome.i18n.getMessage("applyChangesButton");
 
 //placing previous/default values from storage to inputs
 const readInputValueFromStorageAndPlaceDefaultValue = (valueName, element, defaultValue = "") => {

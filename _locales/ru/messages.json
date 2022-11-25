@@ -1,0 +1,56 @@
+{
+  "extName": {
+    "message": "Ютуб таймбнейлы превьюер"
+  },
+  "extDesc": {
+    "message": "Блаблабла"
+  },
+
+  "imageLocalRadioLabel": {
+    "message": "Картинка"
+  },
+  "imageURLRadioLabel": {
+    "message": "Ссылка"
+  },
+
+  "thumbnailURLInputLabel": {
+    "message": "Превью"
+  },
+  "emptyPreviewTextThumbnail": {
+    "message": "Перенесите превью сюда!"
+  },
+  "emptyPreviewTextAvatar": {
+    "message": "Перенесите аватар канала сюда!"
+  },
+  "hoverPreviewTextLMB": {
+    "message": "ЛКМ - загрузить новое изображение"
+  },
+  "hoverPreviewTextRMB": {
+    "message": "ПКМ - убрать изображение"
+  },
+
+  "titleLabelText": {
+    "message": "Название видео"
+  },
+  "channelNameLabelText": {
+    "message": "Название канала"
+  },
+
+  "placeBadgeSwitch": {
+    "message": "Ставить галочку"
+  },
+  "avatarSourceSwitch": {
+    "message": "Использовать аватар текущего юзера"
+  },
+  "randomPositionSwitch": {
+    "message": "Случайный номер заменяемого видео"
+  },
+
+  "numInputLabelText": {
+    "message": "Номер заменяемого видео"
+  },
+
+  "applyChangesButton": {
+    "message": "Применить"
+  }
+}
