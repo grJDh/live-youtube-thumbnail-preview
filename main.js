@@ -58,6 +58,7 @@ const applyChangesButtonElement = document.getElementById("applyChangesButton");
 
 const imageLocalRadioLabelElement = document.getElementById("imageLocalRadioLabel");
 const imageURLRadioLabelElement = document.getElementById("imageURLRadioLabel");
+const thumbnailURLInputLabelTextElement = document.getElementById("thumbnailURLInputLabelText");
 const emptyPreviewTextThumbnailElement = document.getElementsByClassName("emptyPreviewText")[0];
 const emptyPreviewTextAvatarElement = document.getElementsByClassName("emptyPreviewText")[1];
 const hoverPreviewTextLMBElement = document.getElementById("hoverPreviewText").getElementsByTagName("p")[0];
@@ -71,7 +72,7 @@ const numInputLabelTextElement = document.getElementById("numInputLabelText");
 
 imageLocalRadioLabelElement.textContent = chrome.i18n.getMessage("imageLocalRadioLabel");
 imageURLRadioLabelElement.textContent = chrome.i18n.getMessage("imageURLRadioLabel");
-thumbnailURLInputLabelElement.textContent = chrome.i18n.getMessage("thumbnailURLInputLabel");
+thumbnailURLInputLabelTextElement.textContent = chrome.i18n.getMessage("thumbnailURLInputLabelText");
 emptyPreviewTextThumbnailElement.textContent = chrome.i18n.getMessage("emptyPreviewTextThumbnail");
 emptyPreviewTextAvatarElement.textContent = chrome.i18n.getMessage("emptyPreviewTextAvatar");
 hoverPreviewTextLMBElement.textContent = chrome.i18n.getMessage("hoverPreviewTextLMB");

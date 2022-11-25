@@ -13,7 +13,7 @@
     "message": "URL"
   },
 
-  "thumbnailURLInputLabel": {
+  "thumbnailURLInputLabelText": {
     "message": "Thumbnail"
   },
   "emptyPreviewTextThumbnail": {
