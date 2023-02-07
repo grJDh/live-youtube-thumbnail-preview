@@ -33,7 +33,8 @@ body {
   display: none !important;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="number"] {
   border: 0;
   background-color: transparent;
 
@@ -49,7 +50,8 @@ input[type="text"] {
   margin: 0;
 }
 
-input[type="text"]:focus {
+input[type="text"],
+input[type="number"]:focus {
   outline: none;
   border-bottom-color: red;
 }
@@ -74,6 +76,7 @@ input[type="radio"] {
 .flex-center {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .imageSourceRadioLabel {
@@ -137,4 +140,41 @@ input[type="radio"] {
 
 #avatarUploadArea > p {
   font-size: 16px;
+}
+
+.iconButton {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+
+  color: #60606080;
+}
+
+.iconButton:hover {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+
+  color: black;
+}
+
+#numInputLabel {
+  display: flex;
+  justify-content: center;
+}
+
+#numInput {
+  max-width: 36px;
+}
+
+.index-input-row {
+  justify-content: space-between;
 }
