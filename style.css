@@ -101,8 +101,12 @@ input[type="radio"] {
   font-weight: 600;
 }
 
+.upload-row {
+  margin-top: -6px;
+}
+
 #thumbnailUploadArea {
-  border-radius: 12px;
+  border-radius: 20px;
 
   height: 187px;
   width: 100%;
