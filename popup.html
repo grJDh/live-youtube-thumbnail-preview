@@ -11,244 +11,247 @@
     </style>
   </head>
   <body>
-    <div class="flex-center">
-      <input
-        type="radio"
-        id="imageLocalRadio"
-        name="imageSource"
-        value="image"
-      />
-
-      <label
-        id="imageLocalRadioLabel"
-        for="imageLocalRadio"
-        class="imageSourceRadioLabel imageSourceRadioLabelSelected"
-      >
-        Image
-      </label>
-
-      <input
-        type="radio"
-        id="imageURLRadio"
-        name="imageSource"
-        value="url"
-      />
-      <label
-        id="imageURLRadioLabel"
-        for="imageURLRadio"
-        class="imageSourceRadioLabel"
-      >
-        URL
-      </label>
-    </div>
-
-    <div class="flex-center">
-      <!-- <label id="thumbnailURLInputLabel">
-        <span id="thumbnailURLInputLabelText">Thumbnail</span>
-        <input
-          id="thumbnailURLInput"
-          type="text"
-        />
-      </label> -->
-
-      <label
-        id="thumbnailUploadArea"
-        class="flex-center upload-area"
-      >
-        <input
-          class="removed"
-          id="thumbnailUploadInput"
-          type="file"
-          accept="image/*"
-        />
-        <img
-          class="removed"
-          id="thumbnailPreview"
-          src="#"
-          alt="Your Preview"
-        />
-        <p>Drop your thumbnail here!</p>
-        <!-- <div id="hoverPreviewText">
-          <p>LMB - upload new image</p>
-          <p>RMB - remove image</p>
-        </div> -->
-      </label>
-    </div>
-
-    <div class="flex-center relative">
-      <label
-        id="avatarUploadArea"
-        class="flex-center upload-area"
-      >
-        <input
-          class="removed"
-          id="avatarUploadInput"
-          type="file"
-          accept="image/*"
-        />
-        <img
-          class="removed"
-          id="avatarPreview"
-          src="#"
-          alt="Your avatar preview"
-        />
-        <p>Drop avatar</p>
-      </label>
-
-      <label class="absolute avatar-checkbox-label">
-        <input
-          class="removed"
-          type="checkbox"
-        />
-        <img src="/123.png" />
-      </label>
-
-      <label class="textInputLabel">
-        <span
-          class="textInputSpan"
-          id="titleLabelText"
-          >Title</span
-        >
-        <input
-          id="titleInput"
-          type="text"
-        />
-      </label>
-    </div>
-
-    <div class="flex-center">
-      <label class="textInputLabel">
-        <span
-          class="textInputSpan"
-          id="channelNameLabelText"
-          >Channel</span
-        >
-        <input
-          id="channelNameInput"
-          type="text"
-        />
-      </label>
-
-      <input
-        class="removed"
-        id="badgeCheckbox"
-        type="checkbox"
-      />
-      <label
-        class="iconButton"
-        for="badgeCheckbox"
-      >
-        <svg
-          viewBox="0 0 24 24"
-          fill="currentcolor"
-          preserveAspectRatio="xMidYMid meet"
-          focusable="false"
-          style="pointer-events: none; display: block; width: 100%; height: 100%"
-          class="style-scope yt-icon"
-        >
-          <g class="style-scope yt-icon">
-            <path
-              d="M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M9.8,17.3l-4.2-4.1L7,11.8l2.8,2.7L17,7.4 l1.4,1.4L9.8,17.3z"
-              class="style-scope yt-icon"
-            ></path>
-          </g>
-        </svg>
-      </label>
-    </div>
-
-    <div class="flex-center index-input-row">
-      <label
-        id="numInputLabel"
-        for="numInput"
-      >
-        <span id="numInputLabelText">Index of video</span>
-      </label>
-
+    <div class="bod">
       <div class="flex-center">
         <input
-          id="numInput"
-          type="number"
-          min="1"
+          type="radio"
+          id="imageLocalRadio"
+          name="imageSource"
+          value="image"
         />
 
-        <span class="index-input-divider"> / </span>
+        <label
+          id="imageLocalRadioLabel"
+          for="imageLocalRadio"
+          class="imageSourceRadioLabel imageSourceRadioLabelSelected"
+        >
+          Image
+        </label>
+
+        <input
+          type="radio"
+          id="imageURLRadio"
+          name="imageSource"
+          value="url"
+        />
+        <label
+          id="imageURLRadioLabel"
+          for="imageURLRadio"
+          class="imageSourceRadioLabel"
+        >
+          URL
+        </label>
+      </div>
+
+      <div class="flex-center">
+        <!-- <label id="thumbnailURLInputLabel">
+          <span id="thumbnailURLInputLabelText">Thumbnail</span>
+          <input
+            id="thumbnailURLInput"
+            type="text"
+          />
+        </label> -->
+
+        <label
+          id="thumbnailUploadArea"
+          class="flex-center upload-area"
+        >
+          <input
+            class="removed"
+            id="thumbnailUploadInput"
+            type="file"
+            accept="image/*"
+          />
+          <img
+            class="removed"
+            id="thumbnailPreview"
+            src="#"
+            alt="Your Preview"
+          />
+          <p>Drop your thumbnail here!</p>
+          <!-- <div id="hoverPreviewText">
+            <p>LMB - upload new image</p>
+            <p>RMB - remove image</p>
+          </div> -->
+        </label>
+      </div>
+
+      <div class="flex-center relative">
+        <label
+          id="avatarUploadArea"
+          class="flex-center upload-area"
+        >
+          <input
+            class="removed"
+            id="avatarUploadInput"
+            type="file"
+            accept="image/*"
+          />
+          <img
+            class="removed"
+            id="avatarPreview"
+            src="#"
+            alt="Your avatar preview"
+          />
+          <p>Drop avatar</p>
+        </label>
+
+        <label class="absolute avatar-checkbox-label">
+          <input
+            class="removed"
+            type="checkbox"
+          />
+          <img src="/123.png" />
+        </label>
+
+        <label class="textInputLabel">
+          <span
+            class="textInputSpan"
+            id="titleLabelText"
+            >Title</span
+          >
+          <input
+            id="titleInput"
+            type="text"
+          />
+        </label>
+      </div>
+
+      <div class="flex-center">
+        <label class="textInputLabel">
+          <span
+            class="textInputSpan"
+            id="channelNameLabelText"
+            >Channel</span
+          >
+          <input
+            id="channelNameInput"
+            type="text"
+          />
+        </label>
 
         <input
           class="removed"
-          id="randomPositionCheckbox"
+          id="badgeCheckbox"
           type="checkbox"
         />
         <label
           class="iconButton"
-          for="randomPositionCheckbox"
+          for="badgeCheckbox"
         >
           <svg
-            width="22"
-            height="25"
-            viewBox="0 0 22 25"
+            viewBox="0 0 24 24"
             fill="currentcolor"
-            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid meet"
+            focusable="false"
+            style="pointer-events: none; display: block; width: 100%; height: 100%"
+            class="style-scope yt-icon"
           >
-            <path
-              d="M11.166 1L20.55 5.10714V18.25L11.166 24L1 18.25V5.10714L11.166 1Z"
-              fill="currentcolor"
-            />
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M10.9787 0.536405C11.1034 0.486009 11.2432 0.488008 11.3665 0.541951L20.7505 4.64909C20.9324 4.72873 21.05 4.90852 21.05 5.10714V18.25C21.05 18.424 20.9596 18.5854 20.8112 18.6763L11.4272 24.4263C11.2723 24.5213 11.078 24.5247 10.9198 24.4352L0.753842 18.6852C0.59698 18.5965 0.5 18.4302 0.5 18.25V5.10714C0.5 4.90332 0.623721 4.7199 0.812704 4.64355L10.9787 0.536405ZM1.5 5.90521V17.9584L10.666 23.1428V10.349L1.5 5.90521ZM11.666 10.3379V23.1072L20.05 17.97V5.93451L11.666 10.3379ZM19.3966 5.14814L11.1582 1.5424L2.23189 5.14871L11.157 9.47568L19.3966 5.14814Z"
-              fill="#F4F4F4"
-            />
-            <path
-              d="M17.0998 13.65C17.0998 14.2851 16.5849 14.8 15.9498 14.8C15.3147 14.8 14.7998 14.2851 14.7998 13.65C14.7998 13.0149 15.3147 12.5 15.9498 12.5C16.5849 12.5 17.0998 13.0149 17.0998 13.65Z"
-              fill="#F4F4F4"
-            />
-            <path
-              d="M7.9001 17.1C7.9001 17.7351 7.38523 18.25 6.7501 18.25C6.11497 18.25 5.6001 17.7351 5.6001 17.1C5.6001 16.4648 6.11497 15.95 6.7501 15.95C7.38523 15.95 7.9001 16.4648 7.9001 17.1Z"
-              fill="#F4F4F4"
-            />
-            <path
-              d="M5.60029 11.35C5.60029 11.9851 5.08542 12.5 4.45029 12.5C3.81517 12.5 3.30029 11.9851 3.30029 11.35C3.30029 10.7148 3.81517 10.2 4.45029 10.2C5.08542 10.2 5.60029 10.7148 5.60029 11.35Z"
-              fill="#F4F4F4"
-            />
-            <path
-              d="M18.2497 10.2C18.2497 10.8352 17.7348 11.35 17.0997 11.35C16.4646 11.35 15.9497 10.8352 15.9497 10.2C15.9497 9.56492 16.4646 9.05005 17.0997 9.05005C17.7348 9.05005 18.2497 9.56492 18.2497 10.2Z"
-              fill="#F4F4F4"
-            />
-            <path
-              d="M12.4997 5.59995C12.4997 6.23508 11.9848 6.74995 11.3497 6.74995C10.7146 6.74995 10.1997 6.23508 10.1997 5.59995C10.1997 4.96482 10.7146 4.44995 11.3497 4.44995C11.9848 4.44995 12.4997 4.96482 12.4997 5.59995Z"
-              fill="#F4F4F4"
-            />
-            <path
-              d="M15.9504 17.1C15.9504 17.7351 15.4355 18.25 14.8004 18.25C14.1653 18.25 13.6504 17.7351 13.6504 17.1C13.6504 16.4648 14.1653 15.95 14.8004 15.95C15.4355 15.95 15.9504 16.4648 15.9504 17.1Z"
-              fill="#F4F4F4"
-            />
+            <g class="style-scope yt-icon">
+              <path
+                d="M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M9.8,17.3l-4.2-4.1L7,11.8l2.8,2.7L17,7.4 l1.4,1.4L9.8,17.3z"
+                class="style-scope yt-icon"
+              ></path>
+            </g>
           </svg>
         </label>
       </div>
+
+      <div class="flex-center index-input-row">
+        <label
+          id="numInputLabel"
+          for="numInput"
+        >
+          <span id="numInputLabelText">Index of video</span>
+        </label>
+
+        <div class="flex-center">
+          <input
+            id="numInput"
+            type="number"
+            min="1"
+          />
+
+          <span class="index-input-divider"> / </span>
+
+          <input
+            class="removed"
+            id="randomPositionCheckbox"
+            type="checkbox"
+          />
+          <label
+            class="iconButton"
+            for="randomPositionCheckbox"
+          >
+            <svg
+              width="22"
+              height="25"
+              viewBox="0 0 22 25"
+              fill="currentcolor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M11.166 1L20.55 5.10714V18.25L11.166 24L1 18.25V5.10714L11.166 1Z"
+                fill="currentcolor"
+              />
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M10.9787 0.536405C11.1034 0.486009 11.2432 0.488008 11.3665 0.541951L20.7505 4.64909C20.9324 4.72873 21.05 4.90852 21.05 5.10714V18.25C21.05 18.424 20.9596 18.5854 20.8112 18.6763L11.4272 24.4263C11.2723 24.5213 11.078 24.5247 10.9198 24.4352L0.753842 18.6852C0.59698 18.5965 0.5 18.4302 0.5 18.25V5.10714C0.5 4.90332 0.623721 4.7199 0.812704 4.64355L10.9787 0.536405ZM1.5 5.90521V17.9584L10.666 23.1428V10.349L1.5 5.90521ZM11.666 10.3379V23.1072L20.05 17.97V5.93451L11.666 10.3379ZM19.3966 5.14814L11.1582 1.5424L2.23189 5.14871L11.157 9.47568L19.3966 5.14814Z"
+                fill="#F4F4F4"
+              />
+              <path
+                d="M17.0998 13.65C17.0998 14.2851 16.5849 14.8 15.9498 14.8C15.3147 14.8 14.7998 14.2851 14.7998 13.65C14.7998 13.0149 15.3147 12.5 15.9498 12.5C16.5849 12.5 17.0998 13.0149 17.0998 13.65Z"
+                fill="#F4F4F4"
+              />
+              <path
+                d="M7.9001 17.1C7.9001 17.7351 7.38523 18.25 6.7501 18.25C6.11497 18.25 5.6001 17.7351 5.6001 17.1C5.6001 16.4648 6.11497 15.95 6.7501 15.95C7.38523 15.95 7.9001 16.4648 7.9001 17.1Z"
+                fill="#F4F4F4"
+              />
+              <path
+                d="M5.60029 11.35C5.60029 11.9851 5.08542 12.5 4.45029 12.5C3.81517 12.5 3.30029 11.9851 3.30029 11.35C3.30029 10.7148 3.81517 10.2 4.45029 10.2C5.08542 10.2 5.60029 10.7148 5.60029 11.35Z"
+                fill="#F4F4F4"
+              />
+              <path
+                d="M18.2497 10.2C18.2497 10.8352 17.7348 11.35 17.0997 11.35C16.4646 11.35 15.9497 10.8352 15.9497 10.2C15.9497 9.56492 16.4646 9.05005 17.0997 9.05005C17.7348 9.05005 18.2497 9.56492 18.2497 10.2Z"
+                fill="#F4F4F4"
+              />
+              <path
+                d="M12.4997 5.59995C12.4997 6.23508 11.9848 6.74995 11.3497 6.74995C10.7146 6.74995 10.1997 6.23508 10.1997 5.59995C10.1997 4.96482 10.7146 4.44995 11.3497 4.44995C11.9848 4.44995 12.4997 4.96482 12.4997 5.59995Z"
+                fill="#F4F4F4"
+              />
+              <path
+                d="M15.9504 17.1C15.9504 17.7351 15.4355 18.25 14.8004 18.25C14.1653 18.25 13.6504 17.7351 13.6504 17.1C13.6504 16.4648 14.1653 15.95 14.8004 15.95C15.4355 15.95 15.9504 16.4648 15.9504 17.1Z"
+                fill="#F4F4F4"
+              />
+            </svg>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex-center button-row">
+        <button
+          class="bottom-button button-red"
+          id="applyChangesButton"
+        >
+          Apply
+        </button>
+        <button
+          class="bottom-button button-white"
+          id="clearAllButton"
+        >
+          Clear all
+        </button>
+      </div>
+
+      <p
+        class="removed"
+        id="wrongUrlText"
+      >
+        This extension works only on Youtube Home, Search, Subscriptions and Video pages!
+      </p>
     </div>
 
-    <div class="flex-center button-row">
-      <button
-        class="bottom-button button-red"
-        id="applyChangesButton"
-      >
-        Apply
-      </button>
-      <button
-        class="bottom-button button-white"
-        id="clearAllButton"
-      >
-        Clear all
-      </button>
-    </div>
-
-    <p
-      class="removed"
-      id="wrongUrlText"
-    >
-      This extension works only on Youtube Home, Search, Subscriptions and Video pages!
-    </p>
     <script src="main.js"></script>
   </body>
 </html>

@@ -12,6 +12,11 @@ p {
 }
 
 body {
+  margin: 0;
+  padding: 0;
+}
+
+.bod {
   width: 366px;
   height: 550px;
   background-color: #f4f4f4;
@@ -21,6 +26,7 @@ body {
 
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 
   /* border: 1px black solid; */
 
@@ -204,6 +210,8 @@ input[type="checkbox"]:checked ~ .iconButton {
   height: 51px;
 
   cursor: pointer;
+
+  font-family: "Exo 2", sans-serif;
 }
 
 .button-row {
