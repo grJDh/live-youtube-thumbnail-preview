@@ -75,7 +75,7 @@
       </label>
     </div>
 
-    <div class="flex-center">
+    <div class="flex-center relative">
       <label
         id="avatarUploadArea"
         class="flex-center upload-area"
@@ -93,6 +93,14 @@
           alt="Your avatar preview"
         />
         <p>Drop avatar</p>
+      </label>
+
+      <label class="absolute avatar-checkbox-label">
+        <input
+          class="removed"
+          type="checkbox"
+        />
+        <img src="/123.png" />
       </label>
 
       <label class="textInputLabel">
@@ -121,7 +129,15 @@
         />
       </label>
 
-      <button class="iconButton">
+      <input
+        class="removed"
+        id="badgeCheckbox"
+        type="checkbox"
+      />
+      <label
+        class="iconButton"
+        for="badgeCheckbox"
+      >
         <svg
           viewBox="0 0 24 24"
           fill="currentcolor"
@@ -137,7 +153,7 @@
             ></path>
           </g>
         </svg>
-      </button>
+      </label>
     </div>
 
     <div class="flex-center index-input-row">
@@ -155,9 +171,17 @@
           min="1"
         />
 
-        <span> / </span>
+        <span class="index-input-divider"> / </span>
 
-        <button class="iconButton">
+        <input
+          class="removed"
+          id="randomPositionCheckbox"
+          type="checkbox"
+        />
+        <label
+          class="iconButton"
+          for="randomPositionCheckbox"
+        >
           <svg
             width="22"
             height="25"
@@ -200,11 +224,24 @@
               fill="#F4F4F4"
             />
           </svg>
-        </button>
+        </label>
       </div>
     </div>
 
-    <div></div>
+    <div class="flex-center button-row">
+      <button
+        class="bottom-button button-red"
+        id="applyChangesButton"
+      >
+        Apply
+      </button>
+      <button
+        class="bottom-button button-white"
+        id="clearAllButton"
+      >
+        Clear all
+      </button>
+    </div>
 
     <p
       class="removed"
