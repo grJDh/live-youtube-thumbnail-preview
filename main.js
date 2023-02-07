@@ -1,7 +1,8 @@
 // chrome.storage.local.clear();
 
-//TODO: remove and place badge in video, subs and search
+//TODO: remove and place badge in video, subs and search doesn't work
 //TODO: if change video without badge and then exact video with badge, badg won't appear
+//TODO: restore video that was replaced after replacing again
 
 //if popup is opened at wrong url, display warning message
 const checkURL = async () => {
@@ -27,7 +28,7 @@ const checkURL = async () => {
 
 checkURL();
 
-//finding all inputs in popup
+//finding all required elements
 const thumbnailURLInputElement = document.getElementById("thumbnailURLInput");
 const thumbnailURLInputLabelElement = document.getElementById("thumbnailURLInputLabel");
 const thumbnailUploadAreaElement = document.getElementById("thumbnailUploadArea");
@@ -56,6 +57,7 @@ const imageLocalRadioElement = document.getElementById("imageLocalRadio");
 const imageURLRadioElement = document.getElementById("imageURLRadio");
 const applyChangesButtonElement = document.getElementById("applyChangesButton");
 
+//finding elements required for localization
 const imageLocalRadioLabelElement = document.getElementById("imageLocalRadioLabel");
 const imageURLRadioLabelElement = document.getElementById("imageURLRadioLabel");
 const thumbnailURLInputLabelTextElement = document.getElementById("thumbnailURLInputLabelText");
@@ -71,6 +73,7 @@ const randomPositionSwitchElement = document.getElementsByClassName("switch-labe
 const numInputLabelTextElement = document.getElementById("numInputLabelText");
 const wrongUrlTextElement = document.getElementById("wrongUrlText");
 
+//localization
 imageLocalRadioLabelElement.textContent = chrome.i18n.getMessage("imageLocalRadioLabel");
 imageURLRadioLabelElement.textContent = chrome.i18n.getMessage("imageURLRadioLabel");
 thumbnailURLInputLabelTextElement.textContent = chrome.i18n.getMessage("thumbnailURLInputLabelText");
@@ -150,7 +153,6 @@ readImageValueFromStorageAndPlaceItInImageSrc("thumbnailUploadInputValue", thumb
 readImageValueFromStorageAndPlaceItInImageSrc("avatarUploadInputValue", avatarPreviewElement);
 
 chrome.storage.local.get("imageSourceValue", result => {
-  console.log(result);
   switch (result["imageSourceValue"]) {
     case "url":
       imageURLRadioElement.checked = true;
@@ -320,12 +322,6 @@ const applyChanges = async page => {
     });
   };
 
-  const saveOriginalVideo = value => {
-    chrome.storage.local.set({ originalVideo: value }, () => {
-      // console.log(value.index)
-    });
-  };
-
   const checkIfVideoIndexChanged = async indexOfVideoToReplace => {
     const savedVideoDetails = await getValueFromStorage("originalVideo");
     const previuosIndexOfVideoToReplace = savedVideoDetails.index;
@@ -401,6 +397,15 @@ const applyChanges = async page => {
   const whatImageToUse = await returnImageToUse();
   const avatarImage = await returnAvatarToUse();
 
+  const saveOriginalVideo = value => {
+    // chrome.storage.local.set({ originalVideo: value }, () => {
+    //   // console.log(value.index)
+    // });
+    console.log(value);
+  };
+
+  saveOriginalVideo(indexOfVideoToReplace);
+
   let videoDiv = undefined;
   let title = undefined;
   let avatar = undefined;
@@ -457,7 +462,10 @@ const applyChanges = async page => {
   let badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
   let badgeWrapper = videoDiv.querySelector("#byline-container");
 
+  console.log(showBadge);
+
   if (showBadge) {
+    badge.style.visibility = "visible";
     if (!badge && badgeWrapper.getElementsByTagName("img").length === 0) {
       const badgeIcon = document.createElement("img");
       badgeIcon.src = chrome.runtime.getURL("badge.svg");

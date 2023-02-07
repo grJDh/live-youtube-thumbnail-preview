@@ -5,46 +5,51 @@
       rel="stylesheet"
       href="style.css"
     />
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600&display=swap");
+    </style>
   </head>
   <body>
-    <main>
-      <div class="flex-center img-or-url-wrapper">
-        <input
-          type="radio"
-          id="imageLocalRadio"
-          name="imageSource"
-          value="image"
-        />
-        <label
-          id="imageLocalRadioLabel"
-          for="imageLocalRadio"
-          class="flex-center img-or-url-label"
-        >
-          Image
-        </label>
+    <div class="flex-center">
+      <input
+        type="radio"
+        id="imageLocalRadio"
+        name="imageSource"
+        value="image"
+      />
 
-        <input
-          type="radio"
-          id="imageURLRadio"
-          name="imageSource"
-          value="url"
-        />
-        <label
-          id="imageURLRadioLabel"
-          for="imageURLRadio"
-          class="flex-center img-or-url-label"
-        >
-          URL
-        </label>
-      </div>
+      <label
+        id="imageLocalRadioLabel"
+        for="imageLocalRadio"
+        class="imageSourceRadioLabel imageSourceRadioLabelSelected"
+      >
+        Image
+      </label>
 
-      <label id="thumbnailURLInputLabel">
+      <input
+        type="radio"
+        id="imageURLRadio"
+        name="imageSource"
+        value="url"
+      />
+      <label
+        id="imageURLRadioLabel"
+        for="imageURLRadio"
+        class="imageSourceRadioLabel"
+      >
+        URL
+      </label>
+    </div>
+
+    <div class="flex-center">
+      <!-- <label id="thumbnailURLInputLabel">
         <span id="thumbnailURLInputLabelText">Thumbnail</span>
         <input
           id="thumbnailURLInput"
           type="text"
         />
-      </label>
+      </label> -->
 
       <label
         id="thumbnailUploadArea"
@@ -62,90 +67,62 @@
           src="#"
           alt="Your Preview"
         />
-        <p class="emptyPreviewText">Drop your thumbnail here!</p>
-        <div id="hoverPreviewText">
+        <p>Drop your thumbnail here!</p>
+        <!-- <div id="hoverPreviewText">
           <p>LMB - upload new image</p>
           <p>RMB - remove image</p>
-        </div>
+        </div> -->
+      </label>
+    </div>
+
+    <div class="flex-center">
+      <label
+        id="avatarUploadArea"
+        class="flex-center upload-area"
+      >
+        <input
+          class="removed"
+          id="avatarUploadInput"
+          type="file"
+          accept="image/*"
+        />
+        <img
+          class="removed"
+          id="avatarPreview"
+          src="#"
+          alt="Your avatar preview"
+        />
+        <p>Drop avatar</p>
       </label>
 
-      <div class="flex-center align-end">
-        <label
-          id="avatarUploadArea"
-          class="flex-center upload-area"
+      <label class="textInputLabel">
+        <span
+          class="textInputSpan"
+          id="titleLabelText"
+          >Title</span
         >
-          <input
-            class="removed"
-            id="avatarUploadInput"
-            type="file"
-            accept="image/*"
-          />
-          <img
-            class="removed"
-            id="avatarPreview"
-            src="#"
-            alt="Your avatar preview"
-          />
-          <p class="emptyPreviewText">Drop your avatar here!</p>
-        </label>
+        <input
+          id="titleInput"
+          type="text"
+        />
+      </label>
+    </div>
 
-        <label class="mt-5">
-          <span id="titleLabelText">Video Title</span>
-          <input
-            id="titleInput"
-            type="text"
-          />
-        </label>
-      </div>
-
-      <label class="mt-5">
-        <span id="channelNameLabelText">Channel Name</span>
+    <div>
+      <label class="textInputLabel">
+        <span
+          class="textInputSpan"
+          id="channelNameLabelText"
+          >Channel</span
+        >
         <input
           id="channelNameInput"
           type="text"
         />
       </label>
-
-      <div class="flex-center switch-wrapper mt-5">
-        <label class="switch-label">
-          <p>Place badge</p>
-          <input
-            id="badgeCheckbox"
-            type="checkbox"
-          />
-          <span class="switch-slider"></span>
-        </label>
-
-        <label class="switch-label -mt-5">
-          <p>Use avatar from current user</p>
-          <input
-            id="useDefaultAvatarCheckbox"
-            type="checkbox"
-          />
-          <span class="switch-slider"></span>
-        </label>
-
-        <label class="switch-label -mt-5">
-          <p>Random position</p>
-          <input
-            id="randomPositionCheckbox"
-            type="checkbox"
-          />
-          <span class="switch-slider"></span>
-        </label>
-
-        <label id="numInputLabel">
-          <span id="numInputLabelText">Index of video to replace</span>
-          <input
-            id="numInput"
-            type="number"
-            min="1"
-          />
-        </label>
-      </div>
-
-      <button id="applyChangesButton">Apply</button>
-    </main>
+    </div>
+    <div></div>
+    <div></div>
 
     <p
       class="removed"
