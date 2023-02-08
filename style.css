@@ -137,8 +137,6 @@ input[type="radio"]:checked + .imageSourceRadioLabel {
   height: 187px;
   width: 100%;
 
-  position: relative;
-
   font-size: 20px;
 }
 .thumbnail-preview {
@@ -287,6 +285,8 @@ input[type="checkbox"]:checked ~ .iconButton {
   cursor: pointer;
 
   font-family: "Exo 2", sans-serif;
+
+  padding-bottom: 4px;
 }
 
 .button-row {
