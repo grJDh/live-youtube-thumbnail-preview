@@ -128,7 +128,7 @@ const readImageValueFromStorageAndPlaceItInImageSrc = (valueName, element) => {
   });
 };
 
-readInputValueFromStorageAndPlaceDefaultValue("thumbnailURLInputValue", thumbnailURLInputElement, "");
+// readInputValueFromStorageAndPlaceDefaultValue("thumbnailURLInputValue", thumbnailURLInputElement, "");
 readInputValueFromStorageAndPlaceDefaultValue("titleInputValue", titleInputElement, "");
 readInputValueFromStorageAndPlaceDefaultValue("channelNameInputValue", channelNameInputElement, "");
 readInputValueFromStorageAndPlaceDefaultValue("numInputValue", numInputElement, "3");
@@ -169,6 +169,14 @@ chrome.storage.local.get("imageSourceValue", result => {
       break;
   }
 });
+chrome.storage.local.get("thumbnailURLInputValue", result => {
+  if (result["thumbnailURLInputValue"] === undefined) {
+    thumbnailURLInputElement.defaultValue = "";
+    chrome.storage.local.set({ ["thumbnailURLInputValue"]: "" }, () => {});
+  } else thumbnailURLInputElement.defaultValue = result["thumbnailURLInputValue"];
+
+  URLThumbnailPreviewElement.src = result["thumbnailURLInputValue"];
+});
 chrome.storage.local.get("badgeCheckboxValue", result => {
   if (result["badgeCheckboxValue"] === undefined) {
     badgeCheckboxElement.checked = false;
@@ -199,7 +207,7 @@ const listenToChangesAndUpdateStorage = (element, valueName, checkbox = false) =
 //   });
 // };
 
-listenToChangesAndUpdateStorage(thumbnailURLInputElement, "thumbnailURLInputValue");
+// listenToChangesAndUpdateStorage(thumbnailURLInputElement, "thumbnailURLInputValue");
 listenToChangesAndUpdateStorage(titleInputElement, "titleInputValue");
 listenToChangesAndUpdateStorage(channelNameInputElement, "channelNameInputValue");
 listenToChangesAndUpdateStorage(numInputElement, "numInputValue");
@@ -235,8 +243,14 @@ imageSourceRadios.forEach(radio =>
     }
   })
 );
+// element.addEventListener("input", async () => {
+//   if (checkbox) chrome.storage.local.set({ [valueName]: element.checked }, () => {});
+//   else chrome.storage.local.set({ [valueName]: element.value }, () => {});
+// });
+
 thumbnailURLInputElement.addEventListener("input", async () => {
   URLThumbnailPreviewElement.src = thumbnailURLInputElement.value;
+  chrome.storage.local.set({ ["thumbnailURLInputValue"]: thumbnailURLInputElement.value }, () => {});
 });
 
 //preview upload
