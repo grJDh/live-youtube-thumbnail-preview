@@ -16,7 +16,7 @@ body {
   padding: 0;
 }
 
-.bod {
+.main {
   width: 366px;
   height: 550px;
   background-color: #f4f4f4;
@@ -64,6 +64,8 @@ input[type="number"] {
 
   padding: 0;
   margin: 0;
+
+  padding-bottom: 3px;
 }
 
 input[type="text"]:focus,
@@ -140,7 +142,14 @@ input[type="radio"]:checked + .imageSourceRadioLabel {
   font-size: 20px;
 }
 #thumbnailPreview {
-  height: 200px;
+  height: 187px;
+}
+#avatarPreview {
+  height: 66px;
+}
+
+.upload-area > img:not(.removed) ~ .emptyPreviewText {
+  display: none;
 }
 
 .upload-area {

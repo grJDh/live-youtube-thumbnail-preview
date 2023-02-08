@@ -3,6 +3,7 @@
 //TODO: remove and place badge in video, subs and search doesn't work
 //TODO: if change video without badge and then exact video with badge, badg won't appear
 //TODO: restore video that was replaced after replacing again
+//add mobile url
 
 //if popup is opened at wrong url, display warning message
 const checkURL = async () => {
@@ -13,13 +14,11 @@ const checkURL = async () => {
     "youtube.com/watch?v=",
   ];
 
-  //add mobile url
-
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const matches = validURLs.filter(url => tab.url.includes(url));
 
   if (matches.length === 0) {
-    const mainElement = document.querySelector("main");
+    const mainElement = document.getElementsByClassName("main")[0];
     const wrongUrlTextElement = document.getElementById("wrongUrlText");
     mainElement.classList.add("removed");
     wrongUrlTextElement.classList.remove("removed");
@@ -34,8 +33,6 @@ const thumbnailURLInputLabelElement = document.getElementById("thumbnailURLInput
 const thumbnailUploadAreaElement = document.getElementById("thumbnailUploadArea");
 const thumbnailUploadInputElement = document.getElementById("thumbnailUploadInput");
 const thumbnailPreviewElement = document.getElementById("thumbnailPreview");
-// const thumbnailPreviewTextElement = document.getElementById("thumbnailPreviewText");
-const hoverPreviewTextElement = document.getElementById("hoverPreviewText");
 
 const titleInputElement = document.getElementById("titleInput");
 
@@ -77,8 +74,8 @@ const wrongUrlTextElement = document.getElementById("wrongUrlText");
 imageLocalRadioLabelElement.textContent = chrome.i18n.getMessage("imageLocalRadioLabel");
 imageURLRadioLabelElement.textContent = chrome.i18n.getMessage("imageURLRadioLabel");
 thumbnailURLInputLabelTextElement.textContent = chrome.i18n.getMessage("thumbnailURLInputLabelText");
-emptyPreviewTextThumbnailElement.textContent = chrome.i18n.getMessage("emptyPreviewTextThumbnail");
-emptyPreviewTextAvatarElement.textContent = chrome.i18n.getMessage("emptyPreviewTextAvatar");
+// emptyPreviewTextThumbnailElement.textContent = chrome.i18n.getMessage("emptyPreviewTextThumbnail");
+// emptyPreviewTextAvatarElement.textContent = chrome.i18n.getMessage("emptyPreviewTextAvatar");
 // hoverPreviewTextLMBElement.textContent = chrome.i18n.getMessage("hoverPreviewTextLMB");
 // hoverPreviewTextRMBElement.textContent = chrome.i18n.getMessage("hoverPreviewTextRMB");
 titleLabelTextElement.textContent = chrome.i18n.getMessage("titleLabelText");
@@ -134,13 +131,13 @@ readInputValueFromStorageAndPlaceDefaultValue("titleInputValue", titleInputEleme
 readInputValueFromStorageAndPlaceDefaultValue("channelNameInputValue", channelNameInputElement, "");
 readInputValueFromStorageAndPlaceDefaultValue("numInputValue", numInputElement, "3");
 
-readCheckboxValueFromStorageAndToggleRemoved(
-  "useDefaultAvatarCheckboxValue",
-  useDefaultAvatarCheckboxElement,
-  avatarUploadAreaElement,
-  true,
-  true
-);
+// readCheckboxValueFromStorageAndToggleRemoved(
+//   "useDefaultAvatarCheckboxValue",
+//   useDefaultAvatarCheckboxElement,
+//   avatarUploadAreaElement,
+//   true,
+//   true
+// );
 readCheckboxValueFromStorageAndToggleRemoved(
   "randomPositionCheckboxValue",
   randomPositionCheckboxElement,
@@ -204,12 +201,12 @@ listenToChangesAndUpdateStorage(channelNameInputElement, "channelNameInputValue"
 listenToChangesAndUpdateStorage(numInputElement, "numInputValue");
 listenToChangesAndUpdateStorage(badgeCheckboxElement, "badgeCheckboxValue");
 
-listenToChangesUpdateStorageAndRemoveElement(
-  useDefaultAvatarCheckboxElement,
-  "useDefaultAvatarCheckboxValue",
-  avatarUploadAreaElement,
-  true
-);
+// listenToChangesUpdateStorageAndRemoveElement(
+//   useDefaultAvatarCheckboxElement,
+//   "useDefaultAvatarCheckboxValue",
+//   avatarUploadAreaElement,
+//   true
+// );
 listenToChangesUpdateStorageAndRemoveElement(
   randomPositionCheckboxElement,
   "randomPositionCheckboxValue",
@@ -281,7 +278,7 @@ thumbnailUploadInputElement.addEventListener("change", event =>
   updatePreview(event.target.files[0], "thumbnailUploadInputValue", thumbnailPreviewElement)
 );
 thumbnailPreviewElement.addEventListener("contextmenu", event => removePreview(event, thumbnailPreviewElement));
-hoverPreviewTextElement.addEventListener("contextmenu", event => removePreview(event, thumbnailPreviewElement));
+// hoverPreviewTextElement.addEventListener("contextmenu", event => removePreview(event, thumbnailPreviewElement));
 
 avatarUploadInputElement.addEventListener("change", event =>
   updatePreview(event.target.files[0], "avatarUploadInputValue", avatarPreviewElement)
@@ -441,7 +438,7 @@ const applyChanges = async page => {
     channelName = videoDiv.querySelectorAll("yt-formatted-string")[0];
   }
 
-  // saveOriginalVideo({
+  // saveOriginalVideo({`
   //   index: indexOfVideoToReplace,
   //   thumbnail: thumbnail.src,
   //   title: title.textContent,

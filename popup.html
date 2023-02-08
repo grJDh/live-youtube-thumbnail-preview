@@ -11,7 +11,7 @@
     </style>
   </head>
   <body>
-    <div class="bod">
+    <div class="main">
       <div class="flex-center relative">
         <input
           type="radio"
@@ -125,7 +125,7 @@
             src="#"
             alt="Your Preview"
           />
-          <p>Drop your thumbnail here!</p>
+          <p class="emptyPreviewText">Drop your thumbnail here!</p>
         </label>
         <!-- </div> -->
       </div>
@@ -147,7 +147,7 @@
             src="#"
             alt="Your avatar preview"
           />
-          <p>Drop avatar</p>
+          <p class="emptyPreviewText">Drop avatar</p>
         </label>
 
         <label class="absolute avatar-checkbox-label">
@@ -299,14 +299,14 @@
           Clear all
         </button>
       </div>
-
-      <p
-        class="removed"
-        id="wrongUrlText"
-      >
-        This extension works only on Youtube Home, Search, Subscriptions and Video pages!
-      </p>
     </div>
+
+    <p
+      class="removed"
+      id="wrongUrlText"
+    >
+      This extension works only on Youtube Home, Search, Subscriptions and Video pages!
+    </p>
 
     <script src="main.js"></script>
   </body>
