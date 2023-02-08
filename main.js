@@ -29,10 +29,12 @@ checkURL();
 
 //finding all required elements
 const thumbnailURLInputElement = document.getElementById("thumbnailURLInput");
-const thumbnailURLInputLabelElement = document.getElementById("thumbnailURLInputLabel");
+const thumbnailURLInputDivElement = document.getElementById("thumbnailURLInputDiv");
+const thumbnailURLInputLabelElement = document.getElementById("thumbnailURLInput");
 const thumbnailUploadAreaElement = document.getElementById("thumbnailUploadArea");
 const thumbnailUploadInputElement = document.getElementById("thumbnailUploadInput");
-const thumbnailPreviewElement = document.getElementById("thumbnailPreview");
+const localThumbnailPreviewElement = document.getElementById("localThumbnailPreview");
+const URLThumbnailPreviewElement = document.getElementById("URLThumbnailPreview");
 
 const titleInputElement = document.getElementById("titleInput");
 
@@ -96,25 +98,25 @@ const readInputValueFromStorageAndPlaceDefaultValue = (valueName, element, defau
     } else element.defaultValue = result[valueName];
   });
 };
-const readCheckboxValueFromStorageAndToggleRemoved = (
-  valueName,
-  element,
-  toggledElement,
-  defaultValue = false,
-  remove = true
-) => {
-  chrome.storage.local.get(valueName, result => {
-    if (result[valueName] === undefined) {
-      element.checked = defaultValue;
-      chrome.storage.local.set({ [valueName]: defaultValue }, () => {});
-    } else element.checked = result[valueName];
+// const readCheckboxValueFromStorageAndToggleRemoved = (
+//   valueName,
+//   element,
+//   toggledElement,
+//   defaultValue = false,
+//   remove = true
+// ) => {
+//   chrome.storage.local.get(valueName, result => {
+//     if (result[valueName] === undefined) {
+//       element.checked = defaultValue;
+//       chrome.storage.local.set({ [valueName]: defaultValue }, () => {});
+//     } else element.checked = result[valueName];
 
-    if (element.checked) {
-      if (remove) toggledElement.classList.add("removed");
-      else toggledElement.classList.remove("removed");
-    }
-  });
-};
+//     if (element.checked) {
+//       if (remove) toggledElement.classList.add("removed");
+//       else toggledElement.classList.remove("removed");
+//     }
+//   });
+// };
 const readImageValueFromStorageAndPlaceItInImageSrc = (valueName, element) => {
   chrome.storage.local.get(valueName, result => {
     if (result[valueName] !== undefined) {
@@ -130,6 +132,7 @@ readInputValueFromStorageAndPlaceDefaultValue("thumbnailURLInputValue", thumbnai
 readInputValueFromStorageAndPlaceDefaultValue("titleInputValue", titleInputElement, "");
 readInputValueFromStorageAndPlaceDefaultValue("channelNameInputValue", channelNameInputElement, "");
 readInputValueFromStorageAndPlaceDefaultValue("numInputValue", numInputElement, "3");
+readInputValueFromStorageAndPlaceDefaultValue("randomPositionCheckboxValue", randomPositionCheckboxElement, false);
 
 // readCheckboxValueFromStorageAndToggleRemoved(
 //   "useDefaultAvatarCheckboxValue",
@@ -138,15 +141,15 @@ readInputValueFromStorageAndPlaceDefaultValue("numInputValue", numInputElement, 
 //   true,
 //   true
 // );
-readCheckboxValueFromStorageAndToggleRemoved(
-  "randomPositionCheckboxValue",
-  randomPositionCheckboxElement,
-  numInputLabelElement,
-  false,
-  true
-);
+// readCheckboxValueFromStorageAndToggleRemoved(
+//   "randomPositionCheckboxValue",
+//   randomPositionCheckboxElement,
+//   numInputLabelElement,
+//   false,
+//   true
+// );
 
-readImageValueFromStorageAndPlaceItInImageSrc("thumbnailUploadInputValue", thumbnailPreviewElement);
+readImageValueFromStorageAndPlaceItInImageSrc("thumbnailUploadInputValue", localThumbnailPreviewElement);
 readImageValueFromStorageAndPlaceItInImageSrc("avatarUploadInputValue", avatarPreviewElement);
 
 chrome.storage.local.get("imageSourceValue", result => {
@@ -157,11 +160,11 @@ chrome.storage.local.get("imageSourceValue", result => {
       break;
     case "image":
       imageLocalRadioElement.checked = true;
-      thumbnailURLInputLabelElement.classList.add("removed");
+      thumbnailURLInputDivElement.classList.add("removed");
       break;
     default:
       imageLocalRadioElement.checked = true;
-      thumbnailURLInputLabelElement.classList.add("removed");
+      thumbnailURLInputDivElement.classList.add("removed");
       chrome.storage.local.set({ ["imageSourceValue"]: "image" }, () => {});
       break;
   }
@@ -176,30 +179,32 @@ chrome.storage.local.get("badgeCheckboxValue", result => {
 });
 
 //starting to listen to all changes in inputs and updating details in video
-const listenToChangesAndUpdateStorage = (element, valueName) => {
+const listenToChangesAndUpdateStorage = (element, valueName, checkbox = false) => {
   element.addEventListener("input", async () => {
-    chrome.storage.local.set({ [valueName]: element.value }, () => {});
+    if (checkbox) chrome.storage.local.set({ [valueName]: element.checked }, () => {});
+    else chrome.storage.local.set({ [valueName]: element.value }, () => {});
   });
 };
-const listenToChangesUpdateStorageAndRemoveElement = (element, valueName, toggledElement, remove = true) => {
-  element.addEventListener("input", async () => {
-    chrome.storage.local.set({ [valueName]: element.checked }, () => {});
+// const listenToChangesUpdateStorageAndRemoveElement = (element, valueName, toggledElement, remove = true) => {
+//   element.addEventListener("input", async () => {
+//     chrome.storage.local.set({ [valueName]: element.checked }, () => {});
 
-    if (remove) {
-      if (element.checked) toggledElement.classList.add("removed");
-      else toggledElement.classList.remove("removed");
-    } else {
-      if (element.checked) toggledElement.classList.remove("removed");
-      else toggledElement.classList.add("removed");
-    }
-  });
-};
+//     if (remove) {
+//       if (element.checked) toggledElement.classList.add("removed");
+//       else toggledElement.classList.remove("removed");
+//     } else {
+//       if (element.checked) toggledElement.classList.remove("removed");
+//       else toggledElement.classList.add("removed");
+//     }
+//   });
+// };
 
 listenToChangesAndUpdateStorage(thumbnailURLInputElement, "thumbnailURLInputValue");
 listenToChangesAndUpdateStorage(titleInputElement, "titleInputValue");
 listenToChangesAndUpdateStorage(channelNameInputElement, "channelNameInputValue");
 listenToChangesAndUpdateStorage(numInputElement, "numInputValue");
-listenToChangesAndUpdateStorage(badgeCheckboxElement, "badgeCheckboxValue");
+listenToChangesAndUpdateStorage(badgeCheckboxElement, "badgeCheckboxValue", true);
+listenToChangesAndUpdateStorage(randomPositionCheckboxElement, "randomPositionCheckboxValue", true);
 
 // listenToChangesUpdateStorageAndRemoveElement(
 //   useDefaultAvatarCheckboxElement,
@@ -207,29 +212,32 @@ listenToChangesAndUpdateStorage(badgeCheckboxElement, "badgeCheckboxValue");
 //   avatarUploadAreaElement,
 //   true
 // );
-listenToChangesUpdateStorageAndRemoveElement(
-  randomPositionCheckboxElement,
-  "randomPositionCheckboxValue",
-  numInputLabelElement,
-  true
-);
+// listenToChangesUpdateStorageAndRemoveElement(
+//   randomPositionCheckboxElement,
+//   "randomPositionCheckboxValue",
+//   numInputLabelElement,
+//   true
+// );
 
-badgeCheckboxElement.addEventListener("input", async () => {
-  chrome.storage.local.set({ ["badgeCheckboxValue"]: badgeCheckboxElement.checked }, () => {});
-});
+// badgeCheckboxElement.addEventListener("input", async () => {
+//   chrome.storage.local.set({ ["badgeCheckboxValue"]: badgeCheckboxElement.checked }, () => {});
+// });
 imageSourceRadios.forEach(radio =>
   radio.addEventListener("input", async () => {
     chrome.storage.local.set({ imageSourceValue: radio.value }, () => {});
 
     if (radio.value === "url") {
       thumbnailUploadAreaElement.classList.add("removed");
-      thumbnailURLInputLabelElement.classList.remove("removed");
+      thumbnailURLInputDivElement.classList.remove("removed");
     } else {
       thumbnailUploadAreaElement.classList.remove("removed");
-      thumbnailURLInputLabelElement.classList.add("removed");
+      thumbnailURLInputDivElement.classList.add("removed");
     }
   })
 );
+thumbnailURLInputElement.addEventListener("input", async () => {
+  URLThumbnailPreviewElement.src = thumbnailURLInputElement.value;
+});
 
 //preview upload
 const preventDefaults = event => {
@@ -266,7 +274,7 @@ const removePreview = (event, element) => {
 thumbnailUploadAreaElement.ondrop = event => {
   thumbnailUploadInputElement.files = event.dataTransfer.files;
 
-  updatePreview(thumbnailUploadInputElement.files[0], "thumbnailUploadInputValue", thumbnailPreviewElement);
+  updatePreview(thumbnailUploadInputElement.files[0], "thumbnailUploadInputValue", localThumbnailPreviewElement);
 };
 avatarUploadAreaElement.ondrop = event => {
   avatarUploadInputElement.files = event.dataTransfer.files;
@@ -275,10 +283,12 @@ avatarUploadAreaElement.ondrop = event => {
 };
 
 thumbnailUploadInputElement.addEventListener("change", event =>
-  updatePreview(event.target.files[0], "thumbnailUploadInputValue", thumbnailPreviewElement)
+  updatePreview(event.target.files[0], "thumbnailUploadInputValue", localThumbnailPreviewElement)
 );
-thumbnailPreviewElement.addEventListener("contextmenu", event => removePreview(event, thumbnailPreviewElement));
-// hoverPreviewTextElement.addEventListener("contextmenu", event => removePreview(event, thumbnailPreviewElement));
+localThumbnailPreviewElement.addEventListener("contextmenu", event =>
+  removePreview(event, localThumbnailPreviewElement)
+);
+// hoverPreviewTextElement.addEventListener("contextmenu", event => removePreview(event, localThumbnailPreviewElement));
 
 avatarUploadInputElement.addEventListener("change", event =>
   updatePreview(event.target.files[0], "avatarUploadInputValue", avatarPreviewElement)
@@ -353,7 +363,6 @@ const applyChanges = async page => {
   const returnIndexOfVideo = async () => {
     // console.log(111);
     const isRandomPosition = await getValueFromStorage("randomPositionCheckboxValue");
-    // console.log(222);
 
     if (isRandomPosition) {
       const randomIndex = Math.floor(Math.random() * maxRandomNumberBasedOnURL[page]);

@@ -141,14 +141,14 @@ input[type="radio"]:checked + .imageSourceRadioLabel {
 
   font-size: 20px;
 }
-#thumbnailPreview {
+.thumbnail-preview {
   height: 187px;
 }
 #avatarPreview {
   height: 66px;
 }
 
-.upload-area > img:not(.removed) ~ .emptyPreviewText {
+.preview-img:not(.removed) ~ .emptyPreviewText {
   display: none;
 }
 

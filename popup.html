@@ -45,7 +45,10 @@
       </div>
 
       <div class="flex-center upload-row relative">
-        <div class="thumbnail-upload-area upload-area upload-decorative removed">
+        <div
+          id="thumbnailURLInputDiv"
+          class="thumbnail-upload-area upload-area upload-decorative"
+        >
           <input
             id="hideURLInput"
             type="checkbox"
@@ -107,6 +110,13 @@
               type="text"
             />
           </label>
+
+          <img
+            class="preview-img thumbnail-preview"
+            id="URLThumbnailPreview"
+            src="#"
+            alt="Your Preview"
+          />
         </div>
 
         <label
@@ -120,14 +130,13 @@
             accept="image/*"
           />
           <img
-            class="removed"
-            id="thumbnailPreview"
+            class="preview-img removed thumbnail-preview"
+            id="localThumbnailPreview"
             src="#"
             alt="Your Preview"
           />
           <p class="emptyPreviewText">Drop your thumbnail here!</p>
         </label>
-        <!-- </div> -->
       </div>
 
       <div class="flex-center relative avatar-row">
@@ -142,7 +151,7 @@
             accept="image/*"
           />
           <img
-            class="removed"
+            class="preview-img removed"
             id="avatarPreview"
             src="#"
             alt="Your avatar preview"
