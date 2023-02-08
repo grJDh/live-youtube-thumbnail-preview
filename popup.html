@@ -12,18 +12,17 @@
   </head>
   <body>
     <div class="bod">
-      <div class="flex-center">
+      <div class="flex-center relative">
         <input
           type="radio"
           id="imageLocalRadio"
           name="imageSource"
           value="image"
         />
-
         <label
           id="imageLocalRadioLabel"
           for="imageLocalRadio"
-          class="imageSourceRadioLabel imageSourceRadioLabelSelected"
+          class="imageSourceRadioLabel"
         >
           Image
         </label>
@@ -41,20 +40,80 @@
         >
           URL
         </label>
+
+        <span class="switch-slider"></span>
       </div>
 
-      <div class="flex-center upload-row">
-        <!-- <label id="thumbnailURLInputLabel">
-          <span id="thumbnailURLInputLabelText">Thumbnail</span>
+      <div class="flex-center upload-row relative">
+        <!-- <div class="thumbnail-upload-area upload-area upload-decorative relative"> -->
+
+        <div class="thumbnail-upload-area upload-area upload-decorative">
           <input
-            id="thumbnailURLInput"
-            type="text"
+            id="hideURLInput"
+            type="checkbox"
+            class="removed"
           />
-        </label> -->
+          <label
+            class="url-input-button iconButton absolute"
+            for="hideURLInput"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.88013 9.88C9.58538 10.1547 9.34897 10.4859 9.185 10.8539C9.02104 11.2218 8.93287 11.6191 8.92576 12.0219C8.91865 12.4247 8.99275 12.8248 9.14364 13.1984C9.29452 13.5719 9.5191 13.9113 9.80397 14.1962C10.0888 14.481 10.4282 14.7056 10.8017 14.8565C11.1753 15.0074 11.5754 15.0815 11.9782 15.0744C12.381 15.0673 12.7783 14.9791 13.1463 14.8151C13.5143 14.6512 13.8455 14.4148 14.1201 14.12"
+                stroke="currentcolor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M10.73 5.08C11.1513 5.02751 11.5754 5.00079 12 5C19 5 22 12 22 12C21.5529 12.9571 20.9922 13.8569 20.33 14.68"
+                stroke="currentcolor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M6.61 6.60999C4.62125 7.96461 3.02987 9.82524 2 12C2 12 5 19 12 19C13.9159 19.0051 15.7908 18.4451 17.39 17.39"
+                stroke="currentcolor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M2 2L22 22"
+                stroke="currentcolor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </label>
+
+          <label
+            class="textInputLabel"
+            id="thumbnailURLInputLabel"
+          >
+            <span
+              class="textInputSpan"
+              id="thumbnailURLInputLabelText"
+              >Thumbnail link</span
+            >
+            <input
+              id="thumbnailURLInput"
+              type="text"
+            />
+          </label>
+        </div>
 
         <label
           id="thumbnailUploadArea"
-          class="flex-center upload-area"
+          class="flex-center upload-area thumbnail-upload-area removed"
         >
           <input
             class="removed"
@@ -69,17 +128,14 @@
             alt="Your Preview"
           />
           <p>Drop your thumbnail here!</p>
-          <!-- <div id="hoverPreviewText">
-            <p>LMB - upload new image</p>
-            <p>RMB - remove image</p>
-          </div> -->
         </label>
+        <!-- </div> -->
       </div>
 
-      <div class="flex-center relative">
+      <div class="flex-center relative avatar-row">
         <label
           id="avatarUploadArea"
-          class="flex-center upload-area"
+          class="flex-center upload-area avatar-upload-area"
         >
           <input
             class="removed"
@@ -117,7 +173,7 @@
         </label>
       </div>
 
-      <div class="flex-center">
+      <div class="flex-center align-end">
         <label class="textInputLabel">
           <span
             class="textInputSpan"
@@ -170,6 +226,8 @@
             id="numInput"
             type="number"
             min="1"
+            max="99"
+            value="6"
           />
 
           <span class="index-input-divider"> / </span>
