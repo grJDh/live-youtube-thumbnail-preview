@@ -345,3 +345,6 @@ input[type="checkbox"]:checked ~ .iconButton {
   border-radius: 50%;
   border: 2px red solid;
 }
+
+#avatarCheckbox:checked {
+}

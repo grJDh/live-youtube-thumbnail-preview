@@ -46,6 +46,27 @@ const numInputElement = document.getElementById("numInput");
 const avatarUploadAreaElement = document.getElementById("avatarUploadArea");
 const avatarUploadInputElement = document.getElementById("avatarUploadInput");
 const avatarPreviewElement = document.getElementById("avatarPreview");
+const avatarCheckboxElement = document.getElementById("avatarCheckbox");
+
+const userAvatarElement = document.getElementById("userAvatar");
+
+const placeUserAvatarInTheExtensionAvatarPreview = async () => {
+  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    args: [],
+    function: () => {
+      const userAvatarSrc = document.getElementById("img").src;
+      chrome.storage.local.set({ ["userAvatarSrc"]: userAvatarSrc }, () => {});
+    },
+  });
+};
+placeUserAvatarInTheExtensionAvatarPreview();
+
+chrome.storage.local.get("userAvatarSrc", result => {
+  console.log(result);
+  userAvatarElement.src = result["userAvatarSrc"];
+});
 
 const badgeCheckboxElement = document.getElementById("badgeCheckbox");
 const useDefaultAvatarCheckboxElement = document.getElementById("useDefaultAvatarCheckbox");
@@ -185,6 +206,8 @@ chrome.storage.local.get("badgeCheckboxValue", result => {
     badgeCheckboxElement.checked = result["badgeCheckboxValue"];
   }
 });
+
+avatarCheckboxElement;
 
 //starting to listen to all changes in inputs and updating details in video
 const listenToChangesAndUpdateStorage = (element, valueName, checkbox = false) => {
