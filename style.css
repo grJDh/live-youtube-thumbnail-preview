@@ -167,19 +167,23 @@ input[type="radio"]:checked + .imageSourceRadioLabel {
   background-color: grey;
 }
 
-#thumbnailURLInputLabel {
-  background-color: #f8f8f8;
-}
-
 .upload-area.upload-decorative {
   align-items: start;
 }
 
 #thumbnailURLInputLabel {
-  max-width: 95%;
   width: 100%;
   height: 45px;
+
   font-size: 16px;
+
+  background-color: #f8f8f8;
+
+  z-index: 10;
+
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-bottom: 2px;
 }
 
 .upload-area.upload-decorative:hover,
@@ -196,12 +200,22 @@ input[type="radio"]:checked + .imageSourceRadioLabel {
   right: 0;
   top: 0;
 
-  z-index: 10;
+  z-index: 999;
 }
 
 #hideURLInput:checked ~ #thumbnailURLInput,
 #hideURLInput:checked ~ #thumbnailURLInputLabel {
   display: none;
+}
+
+#URLThumbnailPreview {
+  z-index: 5;
+}
+
+.URLFailedWarning {
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
 }
 
 #avatarUploadArea {
