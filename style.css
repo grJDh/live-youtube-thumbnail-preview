@@ -173,7 +173,7 @@ input[type="radio"]:checked + .imageSourceRadioLabel {
 
 #thumbnailURLInputLabel {
   width: 100%;
-  height: 45px;
+  height: 55px;
 
   font-size: 16px;
 
@@ -183,7 +183,8 @@ input[type="radio"]:checked + .imageSourceRadioLabel {
 
   padding-left: 7px;
   padding-right: 7px;
-  padding-bottom: 2px;
+  padding-bottom: 6px;
+  padding-top: 3px;
 }
 
 .upload-area.upload-decorative:hover,
@@ -192,15 +193,20 @@ input[type="radio"]:checked + .imageSourceRadioLabel {
   cursor: default;
 }
 
-.url-input-button {
-  border: 0;
-  background-color: transparent;
-  color: red;
+.url-input-button.iconButton {
+  background-color: #f8f8f8;
+
   cursor: pointer;
+
   right: 0;
   top: 0;
-
   z-index: 999;
+
+  width: 32px;
+  height: 31px;
+
+  border: 0;
+  border-bottom-left-radius: 20px;
 }
 
 #hideURLInput:checked ~ #thumbnailURLInput,
