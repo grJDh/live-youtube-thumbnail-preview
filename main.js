@@ -1,9 +1,9 @@
 // chrome.storage.local.clear();
 
 //TODO: remove and place badge in video, subs and search doesn't work
-//TODO: if change video without badge and then exact video with badge, badg won't appear
+//TODO: if change video without badge and then exact video with badge, badge won't appear
 //TODO: restore video that was replaced after replacing again
-//add mobile url
+//TODO: add and test mobile youtube
 
 //if popup is opened at wrong url, display warning message
 const checkURL = async () => {
