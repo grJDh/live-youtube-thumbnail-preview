@@ -65,8 +65,6 @@ const imageURLRadioLabelElement = document.getElementById("imageURLRadioLabel");
 const thumbnailURLInputLabelTextElement = document.getElementById("thumbnailURLInputLabelText");
 const emptyPreviewTextThumbnailElement = document.getElementsByClassName("emptyPreviewText")[0];
 const emptyPreviewTextAvatarElement = document.getElementsByClassName("emptyPreviewText")[1];
-// const hoverPreviewTextLMBElement = document.getElementById("hoverPreviewText").getElementsByTagName("p")[0];
-// const hoverPreviewTextRMBElement = document.getElementById("hoverPreviewText").getElementsByTagName("p")[1];
 const titleLabelTextElement = document.getElementById("titleLabelText");
 const channelNameLabelTextElement = document.getElementById("channelNameLabelText");
 // const placeBadgeSwitchElement = document.getElementsByClassName("switch-label")[0].getElementsByTagName("p")[0];
@@ -93,12 +91,19 @@ applyChangesButtonElement.textContent = chrome.i18n.getMessage("applyChangesButt
 wrongUrlTextElement.textContent = chrome.i18n.getMessage("wrongUrlText");
 
 //placing previous/default values from storage to inputs
-const readInputValueFromStorageAndPlaceDefaultValue = (valueName, element, defaultValue = "") => {
+const readInputValueFromStorageAndPlaceDefaultValue = (valueName, element, defaultValue = "", checkbox = false) => {
   chrome.storage.local.get(valueName, result => {
-    if (result[valueName] === undefined) {
-      element.defaultValue = defaultValue;
-      chrome.storage.local.set({ [valueName]: defaultValue }, () => {});
-    } else element.defaultValue = result[valueName];
+    if (checkbox) {
+      if (result[valueName] === undefined) {
+        element.checked = defaultValue;
+        chrome.storage.local.set({ [valueName]: defaultValue }, () => {});
+      } else element.checked = result[valueName];
+    } else {
+      if (result[valueName] === undefined) {
+        element.defaultValue = defaultValue;
+        chrome.storage.local.set({ [valueName]: defaultValue }, () => {});
+      } else element.defaultValue = result[valueName];
+    }
   });
 };
 // const readCheckboxValueFromStorageAndToggleRemoved = (
@@ -135,7 +140,12 @@ const readImageValueFromStorageAndPlaceItInImageSrc = (valueName, element) => {
 readInputValueFromStorageAndPlaceDefaultValue("titleInputValue", titleInputElement, "");
 readInputValueFromStorageAndPlaceDefaultValue("channelNameInputValue", channelNameInputElement, "");
 readInputValueFromStorageAndPlaceDefaultValue("numInputValue", numInputElement, "3");
-readInputValueFromStorageAndPlaceDefaultValue("randomPositionCheckboxValue", randomPositionCheckboxElement, false);
+readInputValueFromStorageAndPlaceDefaultValue(
+  "randomPositionCheckboxValue",
+  randomPositionCheckboxElement,
+  false,
+  true
+);
 
 // readCheckboxValueFromStorageAndToggleRemoved(
 //   "useDefaultAvatarCheckboxValue",
@@ -188,6 +198,7 @@ chrome.storage.local.get("badgeCheckboxValue", result => {
     badgeCheckboxElement.checked = result["badgeCheckboxValue"];
   }
 });
+
 const readAvatarCheckboxValueFromStorageAndUpdateAvatarImage = async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   chrome.scripting.executeScript({
@@ -287,6 +298,10 @@ const listenToAvatarSourceChangesUpdateStorageAndUpdateStyle = () => {
   });
 };
 listenToAvatarSourceChangesUpdateStorageAndUpdateStyle();
+
+chrome.storage.local.get("randomPositionCheckboxValue", result => {
+  console.log(result["randomPositionCheckboxValue"]);
+});
 
 // listenToChangesUpdateStorageAndRemoveElement(
 //   useDefaultAvatarCheckboxElement,
@@ -400,7 +415,6 @@ applyChangesButtonElement.addEventListener("click", async () => {
     function: applyChanges,
   });
 });
-
 //main function that finds all components of the video and changes them with values from inputs
 const applyChanges = async page => {
   //getting values from storage

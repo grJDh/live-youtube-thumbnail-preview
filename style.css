@@ -255,6 +255,7 @@ input[type="radio"]:checked + .imageSourceRadioLabel {
   cursor: pointer;
 
   color: #60606080;
+  transition: 0.1s;
 }
 
 .iconButton:hover {
@@ -263,6 +264,7 @@ input[type="radio"]:checked + .imageSourceRadioLabel {
 
 input[type="checkbox"]:checked ~ .iconButton {
   color: red;
+  transition: 0.1s;
 }
 
 .index-input-divider {
