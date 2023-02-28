@@ -242,6 +242,7 @@ input[type="radio"]:checked + .imageSourceRadioLabel {
 
 .avatar-upload-area {
   margin-right: 15px;
+  overflow: hidden;
 }
 
 .iconButton {
@@ -338,13 +339,12 @@ input[type="checkbox"]:checked ~ .iconButton {
   cursor: pointer;
 }
 
-.avatar-checkbox-label > img {
+#userAvatar {
   width: 23px;
   height: 23px;
 
   border-radius: 50%;
   border: 2px red solid;
-}
 
-#avatarCheckbox:checked {
+  background-color: white;
 }

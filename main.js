@@ -50,24 +50,6 @@ const avatarCheckboxElement = document.getElementById("avatarCheckbox");
 
 const userAvatarElement = document.getElementById("userAvatar");
 
-const placeUserAvatarInTheExtensionAvatarPreview = async () => {
-  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    args: [],
-    function: () => {
-      const userAvatarSrc = document.getElementById("img").src;
-      chrome.storage.local.set({ ["userAvatarSrc"]: userAvatarSrc }, () => {});
-    },
-  });
-};
-placeUserAvatarInTheExtensionAvatarPreview();
-
-chrome.storage.local.get("userAvatarSrc", result => {
-  console.log(result);
-  userAvatarElement.src = result["userAvatarSrc"];
-});
-
 const badgeCheckboxElement = document.getElementById("badgeCheckbox");
 const useDefaultAvatarCheckboxElement = document.getElementById("useDefaultAvatarCheckbox");
 const randomPositionCheckboxElement = document.getElementById("randomPositionCheckbox");
@@ -206,8 +188,46 @@ chrome.storage.local.get("badgeCheckboxValue", result => {
     badgeCheckboxElement.checked = result["badgeCheckboxValue"];
   }
 });
+const readAvatarCheckboxValueFromStorageAndUpdateAvatarImage = async () => {
+  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    args: [],
+    function: () => {
+      const userAvatarSrc = document.getElementById("img").src;
+      chrome.storage.local.set({ ["userAvatarSrc"]: userAvatarSrc }, () => {});
+    },
+  });
 
-avatarCheckboxElement;
+  chrome.storage.local.get("useDefaultAvatarCheckboxValue", result => {
+    avatarCheckboxElement.checked = result["useDefaultAvatarCheckboxValue"];
+
+    if (avatarCheckboxElement.checked) {
+      avatarUploadInputElement.disabled = true;
+      avatarUploadAreaElement.classList.remove("upload-area");
+      avatarUploadAreaElement.style.border = "1px solid black";
+
+      chrome.storage.local.get("userAvatarSrc", result => {
+        avatarPreviewElement.src = result["userAvatarSrc"];
+      });
+      chrome.storage.local.get("avatarUploadInputValue", result => {
+        userAvatarElement.src = result["avatarUploadInputValue"];
+      });
+    } else {
+      avatarUploadInputElement.disabled = false;
+      avatarUploadAreaElement.classList.add("upload-area");
+      avatarUploadAreaElement.style.border = "1px dashed black";
+
+      chrome.storage.local.get("avatarUploadInputValue", result => {
+        avatarPreviewElement.src = result["avatarUploadInputValue"];
+      });
+      chrome.storage.local.get("userAvatarSrc", result => {
+        userAvatarElement.src = result["userAvatarSrc"];
+      });
+    }
+  });
+};
+readAvatarCheckboxValueFromStorageAndUpdateAvatarImage();
 
 //starting to listen to all changes in inputs and updating details in video
 const listenToChangesAndUpdateStorage = (element, valueName, checkbox = false) => {
@@ -236,6 +256,37 @@ listenToChangesAndUpdateStorage(channelNameInputElement, "channelNameInputValue"
 listenToChangesAndUpdateStorage(numInputElement, "numInputValue");
 listenToChangesAndUpdateStorage(badgeCheckboxElement, "badgeCheckboxValue", true);
 listenToChangesAndUpdateStorage(randomPositionCheckboxElement, "randomPositionCheckboxValue", true);
+
+const listenToAvatarSourceChangesUpdateStorageAndUpdateStyle = () => {
+  avatarCheckboxElement.addEventListener("input", async () => {
+    chrome.storage.local.set({ ["useDefaultAvatarCheckboxValue"]: avatarCheckboxElement.checked }, () => {});
+
+    if (avatarCheckboxElement.checked) {
+      avatarUploadInputElement.disabled = true;
+      avatarUploadAreaElement.classList.remove("upload-area");
+      avatarUploadAreaElement.style.border = "1px solid black";
+
+      chrome.storage.local.get("userAvatarSrc", result => {
+        avatarPreviewElement.src = result["userAvatarSrc"];
+      });
+      chrome.storage.local.get("avatarUploadInputValue", result => {
+        userAvatarElement.src = result["avatarUploadInputValue"];
+      });
+    } else {
+      avatarUploadInputElement.disabled = false;
+      avatarUploadAreaElement.classList.add("upload-area");
+      avatarUploadAreaElement.style.border = "1px dashed black";
+
+      chrome.storage.local.get("avatarUploadInputValue", result => {
+        avatarPreviewElement.src = result["avatarUploadInputValue"];
+      });
+      chrome.storage.local.get("userAvatarSrc", result => {
+        userAvatarElement.src = result["userAvatarSrc"];
+      });
+    }
+  });
+};
+listenToAvatarSourceChangesUpdateStorageAndUpdateStyle();
 
 // listenToChangesUpdateStorageAndRemoveElement(
 //   useDefaultAvatarCheckboxElement,
