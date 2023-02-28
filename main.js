@@ -1,7 +1,6 @@
 // chrome.storage.local.clear();
 
-//TODO: remove and place badge in video, subs and search doesn't work
-//TODO: if change video without badge and then exact video with badge, badge won't appear
+//TODO: remove and place badge in search doesn't work
 //TODO: restore video that was replaced after replacing again
 //TODO: add and test mobile youtube
 
@@ -299,10 +298,6 @@ const listenToAvatarSourceChangesUpdateStorageAndUpdateStyle = () => {
 };
 listenToAvatarSourceChangesUpdateStorageAndUpdateStyle();
 
-chrome.storage.local.get("randomPositionCheckboxValue", result => {
-  console.log(result["randomPositionCheckboxValue"]);
-});
-
 // listenToChangesUpdateStorageAndRemoveElement(
 //   useDefaultAvatarCheckboxElement,
 //   "useDefaultAvatarCheckboxValue",
@@ -509,7 +504,7 @@ const applyChanges = async page => {
     // chrome.storage.local.set({ originalVideo: value }, () => {
     //   // console.log(value.index)
     // });
-    console.log(value);
+    // console.log(value);
   };
 
   saveOriginalVideo(indexOfVideoToReplace);
@@ -519,6 +514,8 @@ const applyChanges = async page => {
   let avatar = undefined;
   let thumbnail = undefined;
   let channelName = undefined;
+  let badge = undefined;
+  let badgeWrapper = undefined;
 
   //finding all components of the video
   if (page === "home") {
@@ -529,6 +526,8 @@ const applyChanges = async page => {
     channelName =
       videoDiv.getElementsByTagName("ytd-channel-name")[0].children["container"].children["text-container"].children[0]
         .children[0];
+    badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
+    badgeWrapper = videoDiv.querySelector("#byline-container");
   } else if (page === "subs") {
     videoDiv = document.querySelectorAll("ytd-grid-video-renderer")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0];
@@ -536,17 +535,23 @@ const applyChanges = async page => {
     channelName =
       videoDiv.getElementsByTagName("ytd-channel-name")[0].children["container"].children["text-container"].children[0]
         .children[0];
+    badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
+    badgeWrapper = videoDiv.querySelector("#byline-container");
   } else if (page === "search") {
     videoDiv = document.querySelectorAll("ytd-video-renderer")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0];
     avatar = videoDiv.querySelectorAll("#channel-info")[0].querySelectorAll("yt-img-shadow")[0].children[0];
     thumbnail = videoDiv.getElementsByTagName("yt-image")[0].children[0];
     channelName = videoDiv.querySelectorAll("#channel-info")[0].querySelectorAll("yt-formatted-string")[0].children[0];
+    badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
+    badgeWrapper = videoDiv.querySelector("#channel-name");
   } else if (page === "video") {
     videoDiv = document.querySelectorAll("ytd-compact-video-renderer")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("span")[0];
     thumbnail = videoDiv.getElementsByTagName("yt-image")[0].children[0];
     channelName = videoDiv.querySelectorAll("yt-formatted-string")[0];
+    badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
+    badgeWrapper = videoDiv.querySelector("#byline-container");
   }
 
   // saveOriginalVideo({`
@@ -563,26 +568,29 @@ const applyChanges = async page => {
   thumbnail.src = whatImageToUse;
   title.textContent = await getValueFromStorage("titleInputValue");
   channelName.textContent = await getValueFromStorage("channelNameInputValue");
-  avatar.src = avatarImage;
+  if (page === "search" || page === "home") avatar.src = avatarImage;
 
   //placing or removing badge
   const showBadge = await getValueFromStorage("badgeCheckboxValue");
-  let badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
-  let badgeWrapper = videoDiv.querySelector("#byline-container");
 
-  console.log(showBadge);
+  console.log(videoDiv);
+  console.log(badge);
+  console.log(badgeWrapper);
 
   if (showBadge) {
-    badge.style.visibility = "visible";
-    if (!badge && badgeWrapper.getElementsByTagName("img").length === 0) {
+    if (badge === undefined && badgeWrapper.getElementsByTagName("img").length === 0) {
       const badgeIcon = document.createElement("img");
       badgeIcon.src = chrome.runtime.getURL("badge.svg");
       badgeIcon.style.width = "16px";
       badgeIcon.style.marginLeft = "4px";
       badgeIcon.style.marginTop = "2px";
       badgeWrapper.appendChild(badgeIcon);
+    } else {
+      if (badge === undefined) badgeWrapper.getElementsByTagName("img")[0].style.visibility = "visible";
+      else badge.style.visibility = "visible";
     }
   } else {
-    badge.style.visibility = "hidden";
+    if (badge === undefined) badgeWrapper.getElementsByTagName("img")[0].style.visibility = "hidden";
+    else badge.style.visibility = "hidden";
   }
 };
