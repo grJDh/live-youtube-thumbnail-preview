@@ -105,25 +105,7 @@ const readInputValueFromStorageAndPlaceDefaultValue = (valueName, element, defau
     }
   });
 };
-// const readCheckboxValueFromStorageAndToggleRemoved = (
-//   valueName,
-//   element,
-//   toggledElement,
-//   defaultValue = false,
-//   remove = true
-// ) => {
-//   chrome.storage.local.get(valueName, result => {
-//     if (result[valueName] === undefined) {
-//       element.checked = defaultValue;
-//       chrome.storage.local.set({ [valueName]: defaultValue }, () => {});
-//     } else element.checked = result[valueName];
 
-//     if (element.checked) {
-//       if (remove) toggledElement.classList.add("removed");
-//       else toggledElement.classList.remove("removed");
-//     }
-//   });
-// };
 const readImageValueFromStorageAndPlaceItInImageSrc = (valueName, element) => {
   chrome.storage.local.get(valueName, result => {
     if (result[valueName] !== undefined) {
@@ -135,7 +117,6 @@ const readImageValueFromStorageAndPlaceItInImageSrc = (valueName, element) => {
   });
 };
 
-// readInputValueFromStorageAndPlaceDefaultValue("thumbnailURLInputValue", thumbnailURLInputElement, "");
 readInputValueFromStorageAndPlaceDefaultValue("titleInputValue", titleInputElement, "");
 readInputValueFromStorageAndPlaceDefaultValue("channelNameInputValue", channelNameInputElement, "");
 readInputValueFromStorageAndPlaceDefaultValue("numInputValue", numInputElement, "3");
@@ -145,21 +126,6 @@ readInputValueFromStorageAndPlaceDefaultValue(
   false,
   true
 );
-
-// readCheckboxValueFromStorageAndToggleRemoved(
-//   "useDefaultAvatarCheckboxValue",
-//   useDefaultAvatarCheckboxElement,
-//   avatarUploadAreaElement,
-//   true,
-//   true
-// );
-// readCheckboxValueFromStorageAndToggleRemoved(
-//   "randomPositionCheckboxValue",
-//   randomPositionCheckboxElement,
-//   numInputLabelElement,
-//   false,
-//   true
-// );
 
 readImageValueFromStorageAndPlaceItInImageSrc("thumbnailUploadInputValue", localThumbnailPreviewElement);
 readImageValueFromStorageAndPlaceItInImageSrc("avatarUploadInputValue", avatarPreviewElement);
@@ -246,21 +212,7 @@ const listenToChangesAndUpdateStorage = (element, valueName, checkbox = false) =
     else chrome.storage.local.set({ [valueName]: element.value }, () => {});
   });
 };
-// const listenToChangesUpdateStorageAndRemoveElement = (element, valueName, toggledElement, remove = true) => {
-//   element.addEventListener("input", async () => {
-//     chrome.storage.local.set({ [valueName]: element.checked }, () => {});
 
-//     if (remove) {
-//       if (element.checked) toggledElement.classList.add("removed");
-//       else toggledElement.classList.remove("removed");
-//     } else {
-//       if (element.checked) toggledElement.classList.remove("removed");
-//       else toggledElement.classList.add("removed");
-//     }
-//   });
-// };
-
-// listenToChangesAndUpdateStorage(thumbnailURLInputElement, "thumbnailURLInputValue");
 listenToChangesAndUpdateStorage(titleInputElement, "titleInputValue");
 listenToChangesAndUpdateStorage(channelNameInputElement, "channelNameInputValue");
 listenToChangesAndUpdateStorage(numInputElement, "numInputValue");
@@ -298,22 +250,6 @@ const listenToAvatarSourceChangesUpdateStorageAndUpdateStyle = () => {
 };
 listenToAvatarSourceChangesUpdateStorageAndUpdateStyle();
 
-// listenToChangesUpdateStorageAndRemoveElement(
-//   useDefaultAvatarCheckboxElement,
-//   "useDefaultAvatarCheckboxValue",
-//   avatarUploadAreaElement,
-//   true
-// );
-// listenToChangesUpdateStorageAndRemoveElement(
-//   randomPositionCheckboxElement,
-//   "randomPositionCheckboxValue",
-//   numInputLabelElement,
-//   true
-// );
-
-// badgeCheckboxElement.addEventListener("input", async () => {
-//   chrome.storage.local.set({ ["badgeCheckboxValue"]: badgeCheckboxElement.checked }, () => {});
-// });
 imageSourceRadios.forEach(radio =>
   radio.addEventListener("input", async () => {
     chrome.storage.local.set({ imageSourceValue: radio.value }, () => {});
@@ -327,10 +263,6 @@ imageSourceRadios.forEach(radio =>
     }
   })
 );
-// element.addEventListener("input", async () => {
-//   if (checkbox) chrome.storage.local.set({ [valueName]: element.checked }, () => {});
-//   else chrome.storage.local.set({ [valueName]: element.value }, () => {});
-// });
 
 thumbnailURLInputElement.addEventListener("input", async () => {
   URLThumbnailPreviewElement.src = thumbnailURLInputElement.value;
