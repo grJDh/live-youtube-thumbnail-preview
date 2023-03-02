@@ -521,7 +521,7 @@ const applyChanges = async page => {
   if (page === "search" || page === "home") avatar.src = avatarImage;
 
   //for now, I just remove it; later will add an option to toggle it
-  note.style.display = "none";
+  // note.style.display = "none";
 
   //placing or removing badge
   const showBadge = await getValueFromStorage("badgeCheckboxValue");
