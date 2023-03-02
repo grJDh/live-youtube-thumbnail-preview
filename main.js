@@ -305,34 +305,36 @@ const updatePreview = async (file, value, element) => {
     element.classList.add("removed");
   }
 };
-const removePreview = (event, element) => {
-  event.preventDefault();
-  element.classList.add("removed");
-  element.src = "";
-};
 
 thumbnailUploadAreaElement.ondrop = event => {
   thumbnailUploadInputElement.files = event.dataTransfer.files;
 
   updatePreview(thumbnailUploadInputElement.files[0], "thumbnailUploadInputValue", localThumbnailPreviewElement);
 };
+thumbnailUploadInputElement.addEventListener("change", event =>
+  updatePreview(event.target.files[0], "thumbnailUploadInputValue", localThumbnailPreviewElement)
+);
+
 avatarUploadAreaElement.ondrop = event => {
   avatarUploadInputElement.files = event.dataTransfer.files;
 
   updatePreview(avatarUploadInputElement.files[0], "avatarUploadInputValue", avatarPreviewElement);
 };
+avatarUploadInputElement.addEventListener("change", event =>
+  updatePreview(event.target.files[0], "avatarUploadInputValue", avatarPreviewElement)
+);
 
-// thumbnailUploadInputElement.addEventListener("change", event =>
-//   updatePreview(event.target.files[0], "thumbnailUploadInputValue", localThumbnailPreviewElement)
-// );
+// const removePreview = (event, element) => {
+//   event.preventDefault();
+//   element.classList.add("removed");
+//   element.src = "";
+// };
+
 // localThumbnailPreviewElement.addEventListener("contextmenu", event =>
 //   removePreview(event, localThumbnailPreviewElement)
 // );
 // hoverPreviewTextElement.addEventListener("contextmenu", event => removePreview(event, localThumbnailPreviewElement));
 
-// avatarUploadInputElement.addEventListener("change", event =>
-//   updatePreview(event.target.files[0], "avatarUploadInputValue", avatarPreviewElement)
-// );
 // avatarPreviewElement.addEventListener("contextmenu", event => removePreview(event, avatarPreviewElement));
 
 //applying changes to video on click
@@ -352,6 +354,7 @@ applyChangesButtonElement.addEventListener("click", async () => {
     function: applyChanges,
   });
 });
+
 //main function that finds all components of the video and changes them with values from inputs
 const applyChanges = async page => {
   //getting values from storage
