@@ -164,6 +164,17 @@ chrome.storage.local.get("badgeCheckboxValue", result => {
   }
 });
 
+/*
+  Проблема: мастера констрят игроков, что может заставить их перестать любить вашу кампанию
+  Да, бывает что-то сломанное. Как правило, в таких случаях лучше поговорить
+  Решение? Давать им возможности сиять, но не всегда
+
+  Все враги имеют контрспелл
+  Друиды-скауты
+
+  Эта проблема есть, наверное, у всех Мастеров. У кого-то в большей степени, у кого-то в меньшей, но, тем не менее, даже самые опытные и продвинутые Мастера 
+*/
+
 const readAvatarCheckboxValueFromStorageAndUpdateAvatarImage = async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   chrome.scripting.executeScript({
@@ -475,8 +486,8 @@ const applyChanges = async page => {
     avatar = videoDiv.querySelectorAll("#channel-info")[0].querySelectorAll("yt-img-shadow")[0].children[0];
     thumbnail = videoDiv.getElementsByTagName("yt-image")[0].children[0];
     channelName = videoDiv.querySelectorAll("#channel-info")[0].querySelectorAll("yt-formatted-string")[0].children[0];
-    badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
-    badgeWrapper = videoDiv.querySelector("#channel-name");
+    badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[1];
+    badgeWrapper = videoDiv.getElementsByTagName("ytd-channel-name")[1];
   } else if (page === "video") {
     videoDiv = document.querySelectorAll("ytd-compact-video-renderer")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("span")[0];
