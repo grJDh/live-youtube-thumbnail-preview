@@ -530,6 +530,3 @@ const applyChanges = async page => {
     else badge.style.visibility = "hidden";
   }
 };
-
-//badge badge-style-type-verified-artist style-scope ytd-badge-supported-renderer
-//badge badge-style-type-verified style-scope ytd-badge-supported-renderer

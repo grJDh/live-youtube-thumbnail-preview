@@ -19,7 +19,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["badge.svg"],
+      "resources": ["badge.svg", "note.svg"],
       "matches": ["https://www.youtube.com/*", "https://m.youtube.com/*"]
     }
   ]
