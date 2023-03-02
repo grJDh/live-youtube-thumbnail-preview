@@ -1,6 +1,5 @@
 // chrome.storage.local.clear();
 
-//TODO: remove and place badge in search doesn't work
 //TODO: restore video that was replaced after replacing again
 //TODO: add and test mobile youtube
 
@@ -323,18 +322,18 @@ avatarUploadAreaElement.ondrop = event => {
   updatePreview(avatarUploadInputElement.files[0], "avatarUploadInputValue", avatarPreviewElement);
 };
 
-thumbnailUploadInputElement.addEventListener("change", event =>
-  updatePreview(event.target.files[0], "thumbnailUploadInputValue", localThumbnailPreviewElement)
-);
-localThumbnailPreviewElement.addEventListener("contextmenu", event =>
-  removePreview(event, localThumbnailPreviewElement)
-);
+// thumbnailUploadInputElement.addEventListener("change", event =>
+//   updatePreview(event.target.files[0], "thumbnailUploadInputValue", localThumbnailPreviewElement)
+// );
+// localThumbnailPreviewElement.addEventListener("contextmenu", event =>
+//   removePreview(event, localThumbnailPreviewElement)
+// );
 // hoverPreviewTextElement.addEventListener("contextmenu", event => removePreview(event, localThumbnailPreviewElement));
 
-avatarUploadInputElement.addEventListener("change", event =>
-  updatePreview(event.target.files[0], "avatarUploadInputValue", avatarPreviewElement)
-);
-avatarPreviewElement.addEventListener("contextmenu", event => removePreview(event, avatarPreviewElement));
+// avatarUploadInputElement.addEventListener("change", event =>
+//   updatePreview(event.target.files[0], "avatarUploadInputValue", avatarPreviewElement)
+// );
+// avatarPreviewElement.addEventListener("contextmenu", event => removePreview(event, avatarPreviewElement));
 
 //applying changes to video on click
 applyChangesButtonElement.addEventListener("click", async () => {
