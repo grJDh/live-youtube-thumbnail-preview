@@ -459,6 +459,7 @@ const applyChanges = async page => {
   let channelName = undefined;
   let badge = undefined;
   let badgeWrapper = undefined;
+  let note = undefined;
 
   //finding all components of the video
   if (page === "home") {
@@ -471,6 +472,7 @@ const applyChanges = async page => {
         .children[0];
     badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
     badgeWrapper = videoDiv.querySelector("#byline-container");
+    note = videoDiv.getElementsByTagName("ytd-badge-supported-renderer")[1];
   } else if (page === "subs") {
     videoDiv = document.querySelectorAll("ytd-grid-video-renderer")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0];
@@ -480,6 +482,7 @@ const applyChanges = async page => {
         .children[0];
     badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
     badgeWrapper = videoDiv.querySelector("#byline-container");
+    note = videoDiv.getElementsByTagName("ytd-badge-supported-renderer")[1];
   } else if (page === "search") {
     videoDiv = document.querySelectorAll("ytd-video-renderer")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0];
@@ -488,6 +491,7 @@ const applyChanges = async page => {
     channelName = videoDiv.querySelectorAll("#channel-info")[0].querySelectorAll("yt-formatted-string")[0].children[0];
     badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[1];
     badgeWrapper = videoDiv.getElementsByTagName("ytd-channel-name")[1];
+    note = videoDiv.getElementsByTagName("ytd-badge-supported-renderer")[3];
   } else if (page === "video") {
     videoDiv = document.querySelectorAll("ytd-compact-video-renderer")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("span")[0];
@@ -495,6 +499,7 @@ const applyChanges = async page => {
     channelName = videoDiv.querySelectorAll("yt-formatted-string")[0];
     badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
     badgeWrapper = videoDiv.querySelector("#byline-container");
+    note = videoDiv.getElementsByTagName("ytd-badge-supported-renderer")[1];
   }
 
   // saveOriginalVideo({`
@@ -513,12 +518,11 @@ const applyChanges = async page => {
   channelName.textContent = await getValueFromStorage("channelNameInputValue");
   if (page === "search" || page === "home") avatar.src = avatarImage;
 
+  //for now, I just remove it; later will add an option to toggle it
+  note.style.display = "none";
+
   //placing or removing badge
   const showBadge = await getValueFromStorage("badgeCheckboxValue");
-
-  console.log(videoDiv);
-  console.log(badge);
-  console.log(badgeWrapper);
 
   if (showBadge) {
     if (badge === undefined && badgeWrapper.getElementsByTagName("img").length === 0) {
