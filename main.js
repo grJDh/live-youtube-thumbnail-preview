@@ -163,17 +163,6 @@ chrome.storage.local.get("badgeCheckboxValue", result => {
   }
 });
 
-/*
-  Проблема: мастера констрят игроков, что может заставить их перестать любить вашу кампанию
-  Да, бывает что-то сломанное. Как правило, в таких случаях лучше поговорить
-  Решение? Давать им возможности сиять, но не всегда
-
-  Все враги имеют контрспелл
-  Друиды-скауты
-
-  Эта проблема есть, наверное, у всех Мастеров. У кого-то в большей степени, у кого-то в меньшей, но, тем не менее, даже самые опытные и продвинутые Мастера 
-*/
-
 const readAvatarCheckboxValueFromStorageAndUpdateAvatarImage = async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   chrome.scripting.executeScript({
@@ -474,7 +463,7 @@ const applyChanges = async page => {
         .children[0];
     badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
     badgeWrapper = videoDiv.querySelector("#byline-container");
-    note = videoDiv.getElementsByTagName("ytd-badge-supported-renderer")[1];
+    note = videoDiv.getElementsByClassName("badge badge-style-type-verified-artist")[0];
   } else if (page === "subs") {
     videoDiv = document.querySelectorAll("ytd-grid-video-renderer")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0];
@@ -484,7 +473,7 @@ const applyChanges = async page => {
         .children[0];
     badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
     badgeWrapper = videoDiv.querySelector("#byline-container");
-    note = videoDiv.getElementsByTagName("ytd-badge-supported-renderer")[1];
+    note = videoDiv.getElementsByClassName("badge badge-style-type-verified-artist")[0];
   } else if (page === "search") {
     videoDiv = document.querySelectorAll("ytd-video-renderer")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("a")[0];
@@ -493,7 +482,7 @@ const applyChanges = async page => {
     channelName = videoDiv.querySelectorAll("#channel-info")[0].querySelectorAll("yt-formatted-string")[0].children[0];
     badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[1];
     badgeWrapper = videoDiv.getElementsByTagName("ytd-channel-name")[1];
-    note = videoDiv.getElementsByTagName("ytd-badge-supported-renderer")[3];
+    note = videoDiv.getElementsByClassName("badge badge-style-type-verified-artist")[1];
   } else if (page === "video") {
     videoDiv = document.querySelectorAll("ytd-compact-video-renderer")[indexOfVideoToReplace].children["dismissible"];
     title = videoDiv.getElementsByTagName("h3")[0].getElementsByTagName("span")[0];
@@ -501,7 +490,7 @@ const applyChanges = async page => {
     channelName = videoDiv.querySelectorAll("yt-formatted-string")[0];
     badge = videoDiv.getElementsByClassName("badge badge-style-type-verified")[0];
     badgeWrapper = videoDiv.querySelector("#byline-container");
-    note = videoDiv.getElementsByTagName("ytd-badge-supported-renderer")[1];
+    note = videoDiv.getElementsByClassName("badge badge-style-type-verified-artist")[0];
   }
 
   // saveOriginalVideo({`
@@ -511,8 +500,6 @@ const applyChanges = async page => {
   //   channelName: channelName.textContent,
   //   avatar: avatar.src,
   // });
-
-  // console.log(videoDiv, thumbnail, title, channelName, avatar);
 
   //applying all fake changes to video
   thumbnail.src = whatImageToUse;
@@ -543,3 +530,6 @@ const applyChanges = async page => {
     else badge.style.visibility = "hidden";
   }
 };
+
+//badge badge-style-type-verified-artist style-scope ytd-badge-supported-renderer
+//badge badge-style-type-verified style-scope ytd-badge-supported-renderer
